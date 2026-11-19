@@ -1,0 +1,20 @@
+---
+const { text = "Text option", color = "text-foreground" } = Astro.props;
+import Text from "@/components/fundations/elements/Text.astro";
+---
+
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+  <Text
+    tag="span"
+    variant="textXS"
+    class={`uppercase ${color} font-semibold md:col-span-3 `}
+  >
+    <div class="flex items-center gap-2">
+      <span class="bg-foreground size-3 rounded-full"></span>
+      <div>{text}</div>
+    </div>
+  </Text>
+  <div class="md:col-span-9">
+    <slot />
+  </div>
+</div>

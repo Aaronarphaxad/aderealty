@@ -1,0 +1,22 @@
+---
+import { getCollection, render } from "astro:content";
+import PropertiesLayout from "@/layouts/PropertiesLayout.astro";
+export async function getStaticPaths() {
+  const properties = await getCollection("properties");
+  const paths = properties.map((page) => {
+    const status = page.data.status || "for-sale";
+    return {
+      params: { slug: `${status}/${page.id}` },
+      props: { page },
+      trailingSlash: false,
+    };
+  });
+  return paths;
+}
+const { page } = Astro.props;
+const { Content } = await render(page);
+---
+
+<PropertiesLayout frontmatter={page.data} property={page}>
+  <Content />
+</PropertiesLayout>

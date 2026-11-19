@@ -1,0 +1,63 @@
+---
+// Fundations
+import BaseLayout from "@/layouts/BaseLayout.astro";
+// Components
+import { getEntry, getCollection } from "astro:content";
+import { formatEuro, formatViewingDate, getNextViewings, priceText, pricePerSqm } from "@/lib/properties";
+import MoreHomes from "@/components/properties/MoreHomes.astro";
+import PropertyDetails from "@/components/properties/PropertyDetails.astro";
+import PropertyHero from "@/components/properties/PropertyHero.astro";
+const { frontmatter, property } = Astro.props;
+
+const agent = frontmatter.agent ? await getEntry("agents", frontmatter.agent) : undefined;
+const agentData = agent?.data;
+const neighborhood = frontmatter.neighborhood
+  ? await getEntry("neighborhoods", frontmatter.neighborhood)
+  : undefined;
+const neighborhoodProperties = neighborhood
+  ? (await getCollection("properties")).filter(
+      (item) => item.data.neighborhood === neighborhood.id && item.id !== property.id
+    )
+  : [];
+const viewing = (await getNextViewings()).get(property.id);
+const perSqm = pricePerSqm(property);
+const formatLabel = (value: string) => {
+  const label = value.replace(/-/g, " ");
+  return label.charAt(0).toUpperCase() + label.slice(1);
+};
+const facts = [
+  { label: "Price", value: priceText(property) },
+  perSqm ? { label: "Price per m²", value: formatEuro(perSqm) } : null,
+  frontmatter.monthlyFee ? { label: "Monthly fee", value: `${formatEuro(frontmatter.monthlyFee)} per month` } : null,
+  frontmatter.energyClass ? { label: "Energy class", value: frontmatter.energyClass } : null,
+  frontmatter.bedrooms != null ? { label: "Bedrooms", value: String(frontmatter.bedrooms) } : null,
+  frontmatter.bathrooms != null ? { label: "Bathrooms", value: String(frontmatter.bathrooms) } : null,
+  frontmatter.areaSqm ? { label: "Living area", value: `${frontmatter.areaSqm} m²` } : null,
+  frontmatter.lotSqm ? { label: "Lot size", value: `${frontmatter.lotSqm} m²` } : null,
+  { label: "Type", value: formatLabel(frontmatter.propertyType) },
+  frontmatter.yearBuilt ? { label: "Year built", value: String(frontmatter.yearBuilt) } : null,
+  frontmatter.postalCode ? { label: "Postal code", value: frontmatter.postalCode } : null,
+  frontmatter.pubDate
+    ? {
+        label: "Listed",
+        value: new Date(frontmatter.pubDate).toLocaleDateString("en-GB", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }),
+      }
+    : null,
+].filter((fact): fact is { label: string; value: string } => Boolean(fact));
+---
+
+<BaseLayout>
+  <PropertyHero frontmatter={frontmatter} property={property} viewing={viewing} perSqm={perSqm} />
+  <PropertyDetails frontmatter={frontmatter} agentData={agentData} neighborhood={neighborhood} facts={facts}>
+    <slot />
+  </PropertyDetails>
+  {
+    neighborhoodProperties.length > 0 && (
+      <MoreHomes neighborhood={neighborhood} neighborhoodProperties={neighborhoodProperties} />
+    )
+  }
+</BaseLayout>

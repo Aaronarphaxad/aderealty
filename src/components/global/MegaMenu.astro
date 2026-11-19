@@ -1,0 +1,275 @@
+---
+// Assets
+import { Image } from "astro:assets";
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import FancyLink from "@/components/fundations/elements/FancyLink.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+// Components
+import Toggle from "@/components/global/Toggle.astro";
+// Content Collections
+import { getCollection } from "astro:content";
+
+const allProperties = await getCollection("properties");
+
+const latestPost = (await getCollection("posts")).sort(
+  (a, b) =>
+    new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+)[0];
+
+const latestProperty = allProperties
+  .filter((property) => property.data.pubDate)
+  .sort(
+    (a, b) =>
+      new Date(b.data.pubDate ?? 0).getTime() -
+      new Date(a.data.pubDate ?? 0).getTime()
+  )[0];
+
+const openHouses = (await getCollection("openHouses")).sort(
+  (a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime()
+);
+const now = new Date();
+const openHouse =
+  openHouses.find((house) => new Date(house.data.date) >= now) ??
+  openHouses[openHouses.length - 1];
+const openHouseProperty = openHouse
+  ? allProperties.find((p) => p.id === openHouse.data.property)
+  : undefined;
+
+const formatPrice = (price?: number) =>
+  price ? `€${price.toLocaleString("en-US")}` : "Price on request";
+
+const statusLabels: Record<string, string> = {
+  "for-sale": "For sale",
+  "for-rent": "For rent",
+  "off-market": "Off market",
+  sold: "Sold",
+};
+const statuses = new Set(allProperties.map((p) => p.data.status));
+
+const columns = [
+  {
+    title: "Buy",
+    links: [
+      { label: "All properties", href: "/properties" },
+      ...Object.entries(statusLabels)
+        .filter(([status]) => statuses.has(status))
+        .map(([status, label]) => ({ label, href: `/properties/${status}` })),
+      { label: "Open houses", href: "/open-houses" },
+      { label: "Buying guide", href: "/resources/buying-guide" },
+    ],
+  },
+  {
+    title: "Sell",
+    links: [
+      { label: "Sell your property", href: "/sell-your-property" },
+      { label: "Valuation", href: "/valuation" },
+      { label: "Selling guide", href: "/resources/selling-guide" },
+      { label: "Financing", href: "/resources/financing" },
+    ],
+  },
+  {
+    title: "Discover",
+    links: [
+      { label: "Agents", href: "/agents" },
+      { label: "Services", href: "/services" },
+      { label: "Neighborhoods", href: "/neighborhoods" },
+      { label: "Stories", href: "/stories" },
+    ],
+  },
+  {
+    title: "Company",
+    links: [
+      { label: "About", href: "/company" },
+      { label: "Careers", href: "/careers" },
+      { label: "Blog", href: "/blog" },
+      { label: "Resources", href: "/resources" },
+    ],
+  },
+];
+---
+
+<div data-mega-wrap>
+  <button
+    type="button"
+    aria-expanded="false"
+    aria-controls="mega-desktop"
+    data-mega-trigger
+    class="inline-flex items-center justify-center text-sm group text-foreground focus:outline-none"
+  >
+    <Toggle label="Open sections menu" />
+  </button>
+  <div
+    id="mega-desktop"
+    data-mega-panel
+    class="absolute inset-x-0 z-50 invisible w-full opacity-0 pointer-events-none top-full transition-opacity duration-200 ease-out data-open:visible data-open:opacity-100 data-open:pointer-events-auto"
+  >
+    <Wrapper variant="standard">
+      <div class="overflow-hidden border rounded-lg bg-background border-border">
+        <div class="grid grid-cols-12 gap-8 p-8">
+          <div class="grid grid-cols-4 col-span-8 gap-8">
+            {
+              columns.map((column) => (
+                <div>
+                  <Text
+                    tag="h3"
+                    variant="textXS"
+                    class="flex items-center gap-2 font-semibold uppercase text-foreground"
+                  >
+                    <span class="rounded-full size-2 bg-foreground" aria-hidden="true" />
+                    {column.title}
+                  </Text>
+                  <ul class="flex flex-col gap-2 pt-4 mt-4 border-t border-border">
+                    {column.links.map((link) => (
+                      <li>
+                        <Text
+                          tag="a"
+                          variant="textSM"
+                          href={link.href}
+                          class="duration-300 text-muted-foreground hover:text-foreground"
+                        >
+                          {link.label}
+                        </Text>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))
+            }
+          </div>
+          {
+            latestProperty && (
+              <a
+                href={`/properties/${latestProperty.data.status}/${latestProperty.id}`}
+                class="col-span-4 group"
+              >
+                {latestProperty.data.coverImage?.url && (
+                  <div class="overflow-hidden rounded-lg aspect-4/3 bg-muted">
+                    <Image
+                      src={latestProperty.data.coverImage.url}
+                      alt={latestProperty.data.coverImage.alt || latestProperty.data.title}
+                      width={640}
+                      height={480}
+                      loading="lazy"
+                      decoding="async"
+                      class="object-cover w-full h-full duration-500 ease-out group-hover:scale-105"
+                    />
+                  </div>
+                )}
+                <div class="flex items-start justify-between gap-4 pt-2 mt-4 border-t border-border">
+                  <div>
+                    <Text tag="h3" variant="textSM" class="font-medium text-foreground line-clamp-1">
+                      {latestProperty.data.title}
+                    </Text>
+                    <Text tag="p" variant="textXS" class="mt-1 text-muted-foreground">
+                      New listing in {[latestProperty.data.city, latestProperty.data.country].filter(Boolean).join(", ")}
+                    </Text>
+                  </div>
+                  <Text tag="p" variant="textSM" class="font-medium text-foreground whitespace-nowrap">
+                    {formatPrice(latestProperty.data.price)}
+                  </Text>
+                </div>
+              </a>
+            )
+          }
+        </div>
+        <div class="grid grid-cols-12 gap-8 p-8 border-t border-border">
+          {
+            openHouse && (
+              <a href={`/open-houses/${openHouse.id}`} class="col-span-4 group">
+                <Text tag="p" variant="textXS" class="font-semibold uppercase text-foreground">
+                  Open house
+                </Text>
+                <Text
+                  tag="p"
+                  variant="textSM"
+                  class="mt-2 font-medium duration-300 text-foreground group-hover:text-muted-foreground line-clamp-1"
+                >
+                  {openHouseProperty?.data.title || openHouse.data.title}
+                </Text>
+                <Text tag="p" variant="textXS" class="mt-1 text-muted-foreground">
+                  <time datetime={new Date(openHouse.data.date).toISOString().slice(0, 10)}>
+                    {new Date(openHouse.data.date).toLocaleDateString("en-GB", {
+                      day: "numeric",
+                      month: "long",
+                    })}
+                  </time>
+                  , {openHouse.data.startTime} to {openHouse.data.endTime}
+                  {openHouseProperty && `, ${openHouseProperty.data.city}`}
+                </Text>
+              </a>
+            )
+          }
+          {
+            latestPost && (
+              <a href={`/blog/posts/${latestPost.id}`} class="col-span-4 group">
+                <Text tag="p" variant="textXS" class="font-semibold uppercase text-foreground">
+                  From the blog
+                </Text>
+                <Text
+                  tag="p"
+                  variant="textSM"
+                  class="mt-2 font-medium duration-300 text-foreground group-hover:text-muted-foreground line-clamp-1"
+                >
+                  {latestPost.data.title}
+                </Text>
+                <Text tag="p" variant="textXS" class="mt-1 text-muted-foreground line-clamp-1">
+                  {latestPost.data.description}
+                </Text>
+              </a>
+            )
+          }
+          <div class="flex flex-col justify-between col-span-4 gap-4">
+            <Text tag="p" variant="textSM" class="text-muted-foreground text-pretty">
+              Talk to an agent about buying, selling or what your home is worth today.
+            </Text>
+            <FancyLink href="/book-a-call" textSizeClass="text-sm">Book a call</FancyLink>
+          </div>
+        </div>
+      </div>
+    </Wrapper>
+  </div>
+</div>
+<script is:inline>
+  const megaTrigger = document.querySelector("[data-mega-trigger]");
+  const megaPanel = document.querySelector("[data-mega-panel]");
+  if (megaTrigger && megaPanel) {
+    const setOpen = (open) => {
+      megaTrigger.setAttribute("aria-expanded", String(open));
+      if (open) {
+        megaPanel.setAttribute("data-open", "true");
+        megaTrigger.setAttribute("data-open", "true");
+      } else {
+        megaPanel.removeAttribute("data-open");
+        megaTrigger.removeAttribute("data-open");
+      }
+    };
+    let justToggled = false;
+    const guard = (fn) => {
+      justToggled = true;
+      try {
+        fn();
+      } finally {
+        setTimeout(() => (justToggled = false), 0);
+      }
+    };
+    megaTrigger.addEventListener("click", () => {
+      guard(() => {
+        const isOpen = megaTrigger.getAttribute("aria-expanded") === "true";
+        setOpen(!isOpen);
+      });
+    });
+    document.addEventListener("click", (e) => {
+      if (justToggled) return;
+      const t = e.target;
+      if (!(t instanceof Element)) return;
+      const isOpen = megaTrigger.getAttribute("aria-expanded") === "true";
+      if (!isOpen) return;
+      const inside = megaTrigger.contains(t) || megaPanel.contains(t);
+      if (!inside) setOpen(false);
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") setOpen(false);
+    });
+  }
+</script>

@@ -1,0 +1,73 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+const stats = [
+  {
+    number: "1,400+",
+    label: "Homes sold since 2009",
+  },
+  {
+    number: "23",
+    label: "Days to sell, on average",
+  },
+  {
+    number: "4",
+    label: "Offices across the Nordics",
+  },
+  {
+    number: "5",
+    label: "Countries served",
+  },
+];
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24">
+    <HeadingWrapper text="Performance">
+      <Text
+        tag="h2"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        Honest pricing, clear updates and a broker who knows the street.
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-8 text-muted-foreground text-pretty">
+        From tailored market analyses and targeted marketing to skillful
+        negotiation, our approach combines local expertise with data-driven
+        insights to deliver the best possible results for our clients. We keep
+        you informed at every step and provide hands-on support to ensure a
+        smooth, transparent, and successful experience.
+      </Text>
+    </HeadingWrapper>
+    <dl
+      class="mt-12 pt-12 border-t border-border grid grid-cols-2 md:grid-cols-4 gap-x-px gap-y-12"
+    >
+      {
+        stats.map((stat) => (
+          <div class="flex flex-col gap">
+            <dt>
+              <Text
+                tag="span"
+                variant="displayXL"
+                class="font-semibold leading-none tracking-tighter text-foreground"
+              >
+                {stat.number}
+              </Text>
+            </dt>
+            <dd>
+              <Text
+                tag="p"
+                variant="textBase"
+                class="mt-2 leading-relaxed text-muted-foreground text-balance"
+              >
+                {stat.label}
+              </Text>
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Wrapper>
+</section>

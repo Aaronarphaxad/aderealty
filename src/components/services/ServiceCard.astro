@@ -1,0 +1,39 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Button from "@/components/fundations/elements/Button.astro";
+// Content
+const { name, tagline, description, category, url } = {
+  url: "/services/" + Astro.props.service.id,
+  name: Astro.props.service.data.name,
+  tagline: Astro.props.service.data.tagline,
+  description: Astro.props.service.data.description,
+  category: Astro.props.service.data.category,
+};
+---
+
+
+<article class="relative flex flex-col h-full justify-between gap-12">
+  <a
+    href={url}
+    title={`Learn more: ${name}`}
+    aria-label={`Learn more about ${name}`}
+    class="absolute inset-0 z-10"></a>
+
+  <div>
+    <div class="relative pl-4 border-l border-border">
+      <Text tag="h3" variant="textSM" class="font-medium text-foreground">
+        {name}
+      </Text>
+      <Text tag="p" variant="textSM" class="text-muted-foreground">
+        {tagline}
+      </Text>
+    </div>
+    <Text tag="p" variant="textSM" class="text-muted-foreground line-clamp-3 mt-8">
+      {description}
+    </Text>
+  </div>
+  <Button isLink size="xs" variant="muted" href={url} class="w-fit">
+    Learn more
+  </Button>
+</article>

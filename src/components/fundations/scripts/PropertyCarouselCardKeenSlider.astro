@@ -1,0 +1,29 @@
+<script>
+  import KeenSlider from "keen-slider";
+  import "keen-slider/keen-slider.min.css";
+  const keenSlider = new KeenSlider(
+    "#keen-slider",
+    {
+      loop: true,
+      slides: {
+        origin: "auto",
+        perView: 1.2,
+        spacing: 5,
+      },
+      breakpoints: {
+        "(min-width: 1024px)": {
+          slides: {
+            origin: "auto",
+            perView: 3.2,
+            spacing: 10,
+          },
+        },
+      },
+    },
+    []
+  );
+  const keenSliderPrevious = document.getElementById("keen-slider-previous");
+  const keenSliderNext = document.getElementById("keen-slider-next");
+  keenSliderPrevious?.addEventListener("click", () => keenSlider.prev());
+  keenSliderNext?.addEventListener("click", () => keenSlider.next());
+</script>

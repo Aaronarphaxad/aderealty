@@ -1,0 +1,13 @@
+---
+description: Content collection schemas, frontmatter discipline, and image() fields for Westend src/content and content.config.
+globs: src/content/**,src/content.config.ts
+---
+
+# Content collections (Westend)
+
+- **Single source of truth:** `src/content.config.ts` defines every collection with Zod + `glob` loaders under `src/content/<folder>/`. Do not widen or rename schema fields without updating all consuming pages/layouts/components.
+- **`image()` fields:** Collections `posts`, `properties`, `agents`, `neighborhoods`, and `stories` use `image()` for `url` values. Keep paths valid for Astro’s image pipeline (see existing entries under `src/content/`). Do not replace with unprocessed remote URLs or non-image strings without updating consumers.
+- **Entry IDs:** URL slugs come from the markdown filename (collection `id`), except **property detail** URLs also encode `status` — see `AGENTS.md` / `src/pages/properties/[...slug].astro`.
+- **`openHouses` folder:** On disk it is `src/content/openHouses` (camelCase). The collection key is `openHouses`; field `property` must be the **`properties` entry id** (e.g. `munkkiniemi-home`). `stories` and `properties` reference ids the same way: `agent`, `neighborhood` and `property` are entry ids.
+- **`stories`:** Boolean field is **`featured`**, not `isFeatured`. Sold stories feed the Recently sold section via `getRecentSales()` in `src/lib/properties.ts`.
+- **Copy-paste templates:** Use real files as references — e.g. `src/content/posts/1.md`, `src/content/properties/munkkiniemi-home.md`, `src/content/legal/privacy-policy.md`, `src/content/openHouses/munkkiniemi-home-open-house.md`.

@@ -1,0 +1,39 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+
+interface Props {
+  tint: "clay" | "sage" | "sand" | "sky";
+  label: string;
+  title: string;
+  description: string;
+}
+
+const { tint, label, title, description } = Astro.props;
+const tints = {
+  clay: "bg-tint-clay",
+  sage: "bg-tint-sage",
+  sand: "bg-tint-sand",
+  sky: "bg-tint-sky",
+};
+---
+
+<!-- Spans two rows of the parent grid so frames and copy line up across cards -->
+<li class="grid row-span-2 grid-rows-subgrid gap-y-4">
+  <div class={`flex flex-col justify-center p-3 rounded-2xl min-h-64 ${tints[tint]}`}>
+    <div class="p-4 rounded-xl bg-background">
+      <slot />
+    </div>
+  </div>
+  <div class="pb-8">
+    <Text tag="span" variant="textXS" class="block text-muted-foreground">
+      {label}
+    </Text>
+    <Text tag="h3" variant="textBase" class="mt-1 font-medium text-foreground">
+      {title}
+    </Text>
+    <Text tag="p" variant="textSM" class="mt-1 text-muted-foreground text-pretty">
+      {description}
+    </Text>
+  </div>
+</li>

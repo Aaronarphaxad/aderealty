@@ -1,0 +1,51 @@
+---
+// Fundations
+import BaseLayout from "@/layouts/BaseLayout.astro";
+// Components
+import PropertyListing from "@/components/properties/PropertyListing.astro";
+// Content
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const allProperties = await getCollection("properties");
+  const statuses = [...new Set(allProperties.map((property) => property.data.status))];
+  return statuses.map((status) => ({
+    params: { status },
+    props: {
+      properties: allProperties
+        .filter((property) => property.data.status === status)
+        .sort((a, b) => (a.data.priority ?? 999) - (b.data.priority ?? 999)),
+    },
+  }));
+}
+
+const { status } = Astro.params;
+const { properties } = Astro.props;
+const copy: Record<string, { label: string; title: string; text: string }> = {
+  "for-sale": {
+    label: "For sale",
+    title: "Homes for sale",
+    text: "Every home we have on the market right now, with the price per m² and the next viewing.",
+  },
+  "for-rent": {
+    label: "For rent",
+    title: "Homes for rent",
+    text: "Long-term rentals we manage, ready for viewings this month.",
+  },
+  sold: {
+    label: "Sold",
+    title: "Recently sold",
+    text: "What homes are really selling for: the price, the size and the street.",
+  },
+  "off-market": {
+    label: "Off market",
+    title: "Off-market homes",
+    text: "Homes our sellers prefer to show privately. Ask an agent for a viewing.",
+  },
+};
+const { label, title, text } = copy[status];
+---
+
+<BaseLayout>
+  <PropertyListing label={label} title={title} text={text} properties={properties} status={status} />
+</BaseLayout>

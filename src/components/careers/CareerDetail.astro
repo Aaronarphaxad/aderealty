@@ -1,0 +1,85 @@
+---
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+const { frontmatter } = Astro.props;
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24 lg:pt-48 space-y-24">
+    <HeadingWrapper text={`${frontmatter.type}, ${frontmatter.department}`}>
+      <Text
+        tag="h2"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        {frontmatter.title}
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-8 text-muted-foreground text-pretty">
+        {frontmatter.description}
+      </Text>
+      <Text tag="p" variant="textSM" class="mt-2 text-muted-foreground">
+        Posted:
+        <time datetime={new Date(frontmatter.pubDate).toISOString()}>
+          {
+            new Date(frontmatter.pubDate).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "2-digit",
+            })
+          }
+        </time>
+      </Text>
+    </HeadingWrapper>
+    <HeadingWrapper text="Position details">
+      <dl class="divide-y divide-border">
+        <div class="flex justify-between py-2">
+          <dt class="text-muted-foreground text-sm">Department</dt>
+          <dd class="font-medium capitalize text-sm text-muted-foreground">
+            {frontmatter.department}
+          </dd>
+        </div>
+        <div class="flex justify-between py-2">
+          <dt class="text-muted-foreground text-sm">Type</dt>
+          <dd class="font-medium capitalize text-sm text-muted-foreground">
+            {frontmatter.type}
+          </dd>
+        </div>
+        <div class="flex justify-between py-2">
+          <dt class="text-muted-foreground text-sm">Location</dt>
+          <dd class="font-medium capitalize text-sm text-muted-foreground">
+            {frontmatter.location}
+          </dd>
+        </div>
+      </dl>
+    </HeadingWrapper>
+    <HeadingWrapper text="Responsibilities">
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <Text tag="h3" variant="textBase" class="font-medium text-foreground">
+            Requirements
+          </Text>
+          <ul class="space-y-2 mt-4" role="list">
+            {
+              frontmatter.requirements.map((req) => (
+                <li class="text-sm text-muted-foreground">{req}</li>
+              ))
+            }
+          </ul>
+        </div>
+        <div>
+          <Text tag="h3" variant="textBase" class="font-medium text-foreground">
+            Benefits
+          </Text>
+          <ul class="space-y-2 mt-4" role="list">
+            {
+              frontmatter.benefits.map((benefit) => (
+                <li class="text-sm text-muted-foreground">{benefit}</li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </HeadingWrapper>
+  </Wrapper>
+</section>

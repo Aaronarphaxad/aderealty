@@ -1,0 +1,14 @@
+---
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24 space-y-24">
+    <HeadingWrapper text="Article">
+      <Wrapper variant="prose">
+        <slot />
+      </Wrapper>
+    </HeadingWrapper>
+  </Wrapper>
+</section>

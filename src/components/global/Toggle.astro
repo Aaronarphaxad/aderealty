@@ -1,0 +1,28 @@
+---
+interface Props {
+  label?: string;
+  class?: string;
+  colorClass?: string;
+}
+
+const {
+  label = "Open menu",
+  class: className = "",
+  colorClass = "bg-foreground",
+} = Astro.props;
+
+const dotBaseClass = `size-2 rounded-full ${colorClass}`;
+---
+
+<span class={`flex items-center gap-1 ${className}`.trim()}>
+  <span class="sr-only">{label}</span>
+  <span
+    aria-hidden="true"
+    class={`${dotBaseClass} translate-x-0 transition-transform duration-300 ease-out group-data-open:-translate-x-3`}
+  ></span>
+  <span
+    aria-hidden="true"
+    class={`${dotBaseClass} translate-x-0 transition-transform duration-300 ease-out group-data-open:-translate-x-1`}
+  ></span>
+  <span aria-hidden="true" class={dotBaseClass}></span>
+</span>

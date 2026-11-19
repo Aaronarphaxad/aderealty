@@ -1,0 +1,107 @@
+---
+// Assets
+import { Image } from "astro:assets";
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+// Content
+import { getEntry } from "astro:content";
+const {
+  image,
+  city,
+  country,
+  url,
+  bedrooms,
+  bathrooms,
+  sizeSqm,
+  title,
+  formattedDate,
+  timeRange,
+} = await (async () => {
+  const openHouse = Astro.props.openHouse;
+  const { title, property, date, startTime, endTime } = openHouse.data;
+
+  // Get the property details
+  let propertyData: any = null;
+  if (property) {
+    const propertyEntry = await getEntry("properties", property);
+    if (propertyEntry) {
+      propertyData = propertyEntry.data;
+    }
+  }
+
+  return {
+    url: "/open-houses/" + openHouse.id,
+    image: propertyData?.coverImage?.url,
+    city: propertyData?.city,
+    country: propertyData?.country,
+    bedrooms: propertyData?.bedrooms,
+    bathrooms: propertyData?.bathrooms,
+    sizeSqm: propertyData?.areaSqm ?? propertyData?.lotSqm,
+    title,
+    formattedDate: new Date(date).toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }),
+    timeRange: `${startTime} - ${endTime}`,
+  };
+})();
+
+const specChips = [
+  bedrooms != null ? `${bedrooms} beds` : null,
+  bathrooms != null ? `${bathrooms} baths` : null,
+  sizeSqm != null ? `${sizeSqm} m²` : null,
+].filter((spec): spec is string => Boolean(spec));
+---
+
+<article class="relative flex flex-col gap-4 group">
+  <a
+    href={url}
+    title={`View details: ${title}`}
+    aria-label={`View open house: ${title}`}
+    class="absolute inset-0 z-10"></a>
+  <div>
+    <Text tag="h3" variant="textSM" class="font-medium text-foreground">
+      {title}
+    </Text>
+    <Text tag="p" variant="textSM" class="text-muted-foreground">
+      {city}, {country}
+    </Text>
+    <Text tag="p" variant="textXS" class="mt-1 text-muted-foreground">
+      {formattedDate}
+    </Text>
+    <Text tag="p" variant="textXS" class="mt-1 text-muted-foreground">
+      {timeRange}
+    </Text>
+  </div>
+  <div class="relative order-first overflow-hidden rounded-lg">
+    {
+      specChips.length > 0 && (
+        <div class="absolute inset-0 z-10 flex items-end justify-start w-full pointer-events-none">
+          <ul class="flex items-center justify-between w-full px-3 py-1 text-background opacity-0 gap-4  bg-foreground/20 backdrop-blur-sm translate-y-2 transition duration-300 ease-out group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0 motion-reduce:transition-none motion-reduce:transform-none">
+            {specChips.map((spec) => (
+              <li>
+                <Text
+                  tag="span"
+                  variant="textXXS"
+                >
+                  {spec}
+                </Text>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+    <Image
+      src={image}
+      alt={title}
+      width={1000}
+      height={667}
+      widths={[480, 800, 1000]}
+      sizes="(min-width: 1024px) 33vw, 100vw"
+      class="object-cover object-center w-full aspect-12/8 transition duration-300 ease-out group-hover:scale-105"
+    />
+  </div>
+</article>

@@ -1,0 +1,36 @@
+---
+// Assets
+import { Image } from "astro:assets";
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+
+const { story } = Astro.props;
+const { name, role, outcome, salePrice, daysOnMarket, photo } = story.data;
+const result = `${outcome === "sold" ? "Sold" : "Bought"} for €${salePrice.toLocaleString("en-US")} in ${daysOnMarket} days`;
+---
+
+<article class="relative flex flex-col gap-4 group">
+  <a
+    href={`/stories/${story.id}`}
+    aria-label={`Read the story: ${name}`}
+    class="absolute inset-0 z-10"></a>
+  <div class="relative overflow-hidden rounded-lg">
+    <Image
+      src={photo.url}
+      alt={photo.alt}
+      width={800}
+      height={1200}
+      loading="lazy"
+      decoding="async"
+      class="object-cover object-center w-full duration-300 ease-out aspect-2/3 group-hover:scale-105"
+    />
+  </div>
+  <div class="pt-2 border-t border-border">
+    <Text tag="h3" variant="textSM" class="font-medium text-foreground">
+      {name}
+    </Text>
+    <Text tag="p" variant="textSM" class="text-muted-foreground">
+      {role}, {result.toLowerCase()}
+    </Text>
+  </div>
+</article>

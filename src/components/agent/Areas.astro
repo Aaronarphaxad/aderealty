@@ -1,0 +1,37 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+// Components
+import SectionHeading from "@/components/agent/SectionHeading.astro";
+// Data
+import { agent, areas } from "@/lib/agent";
+---
+
+<section id="areas" class="scroll-mt-20">
+  <Wrapper variant="standard" class="py-24">
+    <SectionHeading title="Surrey and the Lower Mainland">
+      {agent.shortName} is a Surrey real estate agent based at the eXp Realty office in South
+      Surrey, helping buyers, sellers and investors across Metro Vancouver.
+    </SectionHeading>
+    <div class="grid grid-cols-1 gap-8 p-6 mt-12 rounded-2xl bg-muted lg:grid-cols-3 lg:items-end">
+      <div>
+        <Text tag="span" variant="displayXL" class="block font-semibold leading-none tracking-tighter text-foreground">
+          {areas.length}
+        </Text>
+        <Text tag="p" variant="textSM" class="max-w-xs mt-2 text-foreground text-pretty">
+          communities covered, from Surrey and Vancouver to Chilliwack.
+        </Text>
+      </div>
+      <ul class="flex flex-wrap gap-2 lg:col-span-2 lg:justify-end" role="list">
+        {
+          areas.map((area) => (
+            <li class="flex items-center h-8 px-3 text-sm font-medium rounded-full bg-background text-foreground">
+              {area}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </Wrapper>
+</section>

@@ -1,0 +1,66 @@
+---
+import Text from "@/components/fundations/elements/Text.astro";
+import Button from "@/components/fundations/elements/Button.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+import { getCollection } from "astro:content";
+const { frontmatter } = Astro.props;
+
+const allResources = await getCollection("resources");
+const otherResources = allResources.filter(
+  (resource) => resource.id !== Astro.params.slug
+);
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24 lg:pt-48">
+    <HeadingWrapper text="Resources">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2">
+          <Text
+            tag="h1"
+            variant="displayMD"
+            class="font-semibold leading-none text-foreground tracking-tight text-balance"
+          >
+            {frontmatter.page}
+          </Text>
+          <Wrapper variant="prose" class="mt-12">
+            <slot />
+          </Wrapper>
+        </div>
+        <aside>
+          <div class="lg:sticky lg:top-24">
+            <Text
+              tag="h2"
+              variant="textXL"
+              class="font-semibold text-foreground"
+            >
+              Other resources
+            </Text>
+            <div class="space-y-2 mt-8">
+              {
+                otherResources.map((resource) => (
+                  <a
+                    href={`/resources/${resource.id}`}
+                    class="text-xs block text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {resource.data.page}
+                  </a>
+                ))
+              }
+            </div>
+            <Button
+              isLink
+              size="xs"
+              variant="default"
+              href="/book-a-call"
+              class="mt-12 w-fit"
+            >
+              Book a call
+            </Button>
+          </div>
+        </aside>
+      </div>
+    </HeadingWrapper>
+  </Wrapper>
+</section>

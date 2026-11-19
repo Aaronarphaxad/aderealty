@@ -1,0 +1,38 @@
+---
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+import OpenHouseCard from "@/components/openhouses/OpenHouseCard.astro";
+import { getCollection } from "astro:content";
+
+const allOpenHouses = await getCollection("openHouses");
+
+allOpenHouses.sort((a, b) => {
+  return new Date(a.data.date).getTime() - new Date(b.data.date).getTime();
+});
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24 lg:pt-48">
+    <HeadingWrapper text="Agents">
+      <Text
+        tag="h1"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        Open houses
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-balance">
+        Visit our properties and meet our agents
+      </Text>
+    </HeadingWrapper>
+
+    <div class="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-24">
+      {
+        allOpenHouses.map((openHouse) => (
+          <OpenHouseCard openHouse={openHouse} />
+        ))
+      }
+    </div>
+  </Wrapper>
+</section>

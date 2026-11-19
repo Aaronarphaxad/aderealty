@@ -1,0 +1,23 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+// Components
+import ProperyCarouselCard from "@/components/properties/ProperyCarouselCard.astro";
+// Content
+import { getCollection } from "astro:content";
+const properties = await getCollection("properties");
+const featuredProperties = properties.filter((p) => p.data.isFeatured);
+---
+
+<section>
+  <Wrapper variant="paddingLess" class="py-12 pl-8 lg:pl-24">
+    <div id="keen-slider" class="keen-slider">
+      {
+        featuredProperties.map((property) => (
+          <ProperyCarouselCard property={property} />
+        ))
+      }
+    </div>
+  </Wrapper>
+</section>

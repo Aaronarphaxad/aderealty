@@ -1,0 +1,48 @@
+---
+import { Image } from "astro:assets";
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+const { frontmatter } = Astro.props;
+---
+
+<section>
+  <Wrapper variant="standard" class="pt-24 pb-8 lg:pt-48">
+    <HeadingWrapper text="Blog post">
+      <Text
+        tag="h1"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        {frontmatter.title}
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-pretty">
+        {frontmatter.description}
+      </Text>
+      <div class="mt-8">
+        <Text tag="p" variant="textBase" class="text-muted-foreground">
+          Published on{" "}
+          {
+            new Date(frontmatter.pubDate).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          }
+        </Text>
+      </div>
+    </HeadingWrapper>
+    <Image
+      src={frontmatter.image.url}
+      alt={frontmatter.image.alt}
+      width={1480}
+      height={1200}
+      loading="eager"
+      fetchpriority="high"
+      widths={[640, 1024, 1480]}
+      sizes="100vw"
+      decoding="async"
+      class="object-cover size-full object-center mt-12 rounded-2xl"
+    />
+  </Wrapper>
+</section>

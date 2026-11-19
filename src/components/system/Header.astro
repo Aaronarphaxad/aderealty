@@ -1,0 +1,58 @@
+---
+// Fundations
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+import Text from "@/components/fundations/elements/Text.astro";
+import Button from "@/components/fundations/elements/Button.astro";
+
+interface Props {
+  title: string;
+  text: string;
+}
+const { title, text } = Astro.props;
+const pages = [
+  { label: "Overview", href: "/system/overview" },
+  { label: "Colors", href: "/system/colors" },
+  { label: "Typography", href: "/system/typography" },
+  { label: "Buttons", href: "/system/buttons" },
+  { label: "Links", href: "/system/link" },
+];
+const path = Astro.url.pathname.replace(/\/$/, "");
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24 lg:pt-48">
+    <HeadingWrapper text="System">
+      <Text
+        tag="h1"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance uppercase"
+      >
+        {title}
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-balance">
+        {text}
+      </Text>
+      <nav aria-label="System pages" class="mt-12">
+        <ul class="flex flex-wrap gap-2">
+          {
+            pages.map((page) => (
+              <li>
+                <Button
+                  isLink
+                  href={page.href}
+                  size="xs"
+                  variant={path === page.href ? "default" : "muted"}
+                  aria-current={path === page.href ? "page" : undefined}
+                  class="w-fit"
+                >
+                  {page.label}
+                </Button>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </HeadingWrapper>
+  </Wrapper>
+</section>

@@ -1,0 +1,93 @@
+---
+import { Image } from "astro:assets";
+import Text from "@/components/fundations/elements/Text.astro";
+import Button from "@/components/fundations/elements/Button.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+const { frontmatter, facts, firstName } = Astro.props;
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24 lg:pt-48 space-y-24">
+    <HeadingWrapper text="Agent">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Image
+          src={frontmatter.photo.url}
+          alt={frontmatter.photo.alt}
+          width={800}
+          height={800}
+          class="object-cover w-full rounded-lg aspect-square"
+        />
+        <div class="pl-4 border-l border-border">
+          <Text tag="h1" variant="textBase" class="font-medium text-foreground">
+            {frontmatter.name}
+          </Text>
+
+          <Text tag="p" variant="textXS" class="text-muted-foreground">
+            {frontmatter.role}
+          </Text>
+          <div class="mt-4">
+            <Text tag="p" variant="textXS" class="text-muted-foreground">
+              {frontmatter.licenseId}
+            </Text>
+            <a
+              href="#_"
+              class="block text-xs text-muted-foreground hover:text-accent transition-colors"
+            >
+              {frontmatter.email}
+            </a>
+            <a
+              href="#_"
+              class="block text-xs text-muted-foreground hover:text-accent transition-colors"
+            >
+              {frontmatter.phone}
+            </a>
+          </div>
+          <dl class="grid grid-cols-2 gap-4 mt-8">
+            {
+              facts.map((fact) => (
+                <div>
+                  <dt class="text-xs text-muted-foreground">{fact.label}</dt>
+                  <dd class="text-sm font-medium text-foreground">{fact.value}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </div>
+    </HeadingWrapper>
+    <HeadingWrapper text="Bio">
+      <Wrapper variant="prose">
+        {frontmatter.bio}
+      </Wrapper>
+      <Wrapper variant="prose" class="mt-12">
+        <slot />
+      </Wrapper>
+    </HeadingWrapper>
+    <HeadingWrapper text="consultation">
+      <div>
+        <Text
+          tag="h2"
+          variant="displayLG"
+          class="font-semibold leading-none text-foreground tracking-tight text-balance"
+        >
+          Schedule a consultation
+        </Text>
+        <Text tag="p" variant="textLG" class="mt-8 text-muted-foreground text-pretty">
+          Ready to start your real estate journey? Get in touch to schedule a
+          consultation.
+        </Text>
+      </div>
+
+      <Button
+        isLink
+        size="sm"
+        variant="default"
+        href="/book-a-call"
+        class="md:w-fit w-full lg:mt-40 mt-24"
+      >
+        Contact {firstName}
+      </Button>
+    </HeadingWrapper>
+  </Wrapper>
+</section>

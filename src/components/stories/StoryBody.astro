@@ -1,0 +1,19 @@
+---
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+import ProperySmallCard from "@/components/properties/ProperySmallCard.astro";
+const { frontmatter, property } = Astro.props;
+---
+
+<section>
+  <Wrapper variant="standard" class="pb-24">
+    <HeadingWrapper text={frontmatter.role}>
+      <div class="grid grid-cols-1 gap-12 lg:grid-cols-3">
+        <Wrapper variant="prose" class="lg:col-span-2">
+          <slot />
+        </Wrapper>
+        {property && <ProperySmallCard property={property} />}
+      </div>
+    </HeadingWrapper>
+  </Wrapper>
+</section>

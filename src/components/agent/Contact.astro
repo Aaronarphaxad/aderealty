@@ -1,0 +1,114 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Button from "@/components/fundations/elements/Button.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+// Components
+import SectionHeading from "@/components/agent/SectionHeading.astro";
+// Data
+import { agent, FORM_ACTION } from "@/lib/agent";
+
+const contacts = [
+  { label: "Call or text", value: agent.cell.label, href: agent.cell.href },
+  { label: "Email", value: agent.email.label, href: agent.email.href },
+];
+const interests = [
+  { value: "first-home", label: "Buying my first home" },
+  { value: "upsizing", label: "Upsizing" },
+  { value: "downsizing", label: "Downsizing" },
+  { value: "investing", label: "Investing" },
+  { value: "foreign", label: "Investing from outside Canada" },
+  { value: "selling", label: "Selling my home" },
+];
+const fieldClass =
+  "w-full h-12 px-0 py-2 text-xs bg-transparent border-0 border-b text-foreground border-border placeholder:text-muted-foreground focus:outline-none focus:border-foreground focus:ring-0";
+const fields = [
+  { id: "name", label: "Your name", type: "text", placeholder: "Jordan Lee", autocomplete: "name", required: true },
+  { id: "email", label: "Email address", type: "email", placeholder: "jordan@email.com", autocomplete: "email", required: true },
+  { id: "phone", label: "Phone number", type: "tel", placeholder: "(604) 000-0000", autocomplete: "tel", required: false },
+  { id: "area", label: "Preferred area", type: "text", placeholder: "South Surrey", autocomplete: "off", required: false },
+  { id: "budget", label: "Budget", type: "text", placeholder: "$900,000", autocomplete: "off", required: false },
+];
+---
+
+<section id="contact" class="scroll-mt-20">
+  <Wrapper variant="standard" class="py-24">
+    <div class="grid grid-cols-1 gap-3 lg:grid-cols-5">
+      <div class="flex flex-col justify-between gap-12 p-6 rounded-2xl bg-tint-sky lg:col-span-2">
+        <SectionHeading title="Book a discovery call" onTint>
+          Pick a time on Calendly, or send a note below. {agent.shortName} usually replies within one business day.
+        </SectionHeading>
+        <div class="flex flex-col gap-6">
+          <Button isLink={true} href={agent.bookingUrl} target="_blank" rel="noopener noreferrer" variant="default" size="sm" class="w-fit">
+            Schedule on Calendly
+          </Button>
+          <dl class="p-4 rounded-xl bg-background">
+            {
+              contacts.map((contact) => (
+                <div class="flex items-baseline justify-between gap-4 py-2 border-t border-border first:border-0 first:pt-0 last:pb-0">
+                  <dt class="text-xs text-muted-foreground">{contact.label}</dt>
+                  <dd class="text-sm font-medium text-foreground">
+                    <a href={contact.href} class="transition-colors hover:text-accent">{contact.value}</a>
+                  </dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </div>
+      <form action={FORM_ACTION} method="POST" class="p-6 rounded-2xl bg-muted lg:col-span-3">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-y-12 gap-x-8">
+          {
+            fields.slice(0, 2).map((field) => (
+              <div class="space-y-1">
+                <label for={field.id} class="block text-sm text-foreground">{field.label}</label>
+                <input type={field.type} id={field.id} name={field.id} placeholder={field.placeholder} autocomplete={field.autocomplete} required={field.required} class={fieldClass} />
+              </div>
+            ))
+          }
+          <div class="space-y-1">
+            <label for="interest" class="block text-sm text-foreground">I am interested in</label>
+            <select id="interest" name="interest" class={fieldClass} data-interest-select>
+              {interests.map((option) => <option value={option.value}>{option.label}</option>)}
+            </select>
+          </div>
+          {
+            fields.slice(2).map((field) => (
+              <div class="space-y-1">
+                <label for={field.id} class="block text-sm text-foreground">{field.label}</label>
+                <input type={field.type} id={field.id} name={field.id} placeholder={field.placeholder} autocomplete={field.autocomplete} required={field.required} class={fieldClass} />
+              </div>
+            ))
+          }
+          <div class="space-y-1 lg:col-span-2">
+            <label for="message" class="block text-sm text-foreground">Anything else?</label>
+            <textarea id="message" name="message" rows="3" placeholder="Timeline, must-haves, questions" class={`${fieldClass} h-auto resize-none`}></textarea>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-8 mt-12">
+          <Button variant="default" size="sm" type="submit" class="w-fit">
+            Send message
+          </Button>
+          <Text tag="p" variant="textXS" class="text-muted-foreground">
+            Your details are only used to reply to you.
+          </Text>
+        </div>
+      </form>
+    </div>
+  </Wrapper>
+</section>
+
+<script is:inline>
+  (() => {
+    const select = document.querySelector("[data-interest-select]");
+    if (!select) return;
+    const choose = (value) => {
+      if (value && select.querySelector(`option[value="${value}"]`)) select.value = value;
+    };
+    choose(new URLSearchParams(location.search).get("interest"));
+    document.addEventListener("click", (e) => {
+      const trigger = e.target.closest("[data-interest]");
+      if (trigger) choose(trigger.dataset.interest);
+    });
+  })();
+</script>

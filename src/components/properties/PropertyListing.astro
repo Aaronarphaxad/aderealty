@@ -1,0 +1,148 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Button from "@/components/fundations/elements/Button.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+// Components
+import ProperySmallCard from "@/components/properties/ProperySmallCard.astro";
+// Content
+import { getCollection, type CollectionEntry } from "astro:content";
+
+interface Props {
+  label: string;
+  title: string;
+  text: string;
+  properties: CollectionEntry<"properties">[];
+  status?: string;
+}
+const { label, title, text, properties, status } = Astro.props;
+const statusLabels: Record<string, string> = {
+  "for-sale": "For sale",
+  "for-rent": "For rent",
+  "off-market": "Off market",
+  sold: "Sold",
+};
+const statuses = new Set<string>((await getCollection("properties")).map((p) => p.data.status));
+const countries = [...new Set(properties.map((p) => p.data.country).filter(Boolean))].sort() as string[];
+const cities = [...new Set(properties.map((p) => p.data.city))].sort();
+const selectClass =
+  "h-8 pl-0 pr-8 text-xs bg-transparent border-0 border-b text-foreground border-border focus:outline-none focus:ring-0 focus:border-foreground";
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24 lg:pt-48">
+    <HeadingWrapper text={label}>
+      <Text
+        tag="h1"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        {title}
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-balance">
+        {text}
+      </Text>
+    </HeadingWrapper>
+    <div class="flex flex-wrap items-end justify-between gap-8 pt-8 mt-24 border-t border-border">
+      <nav aria-label="Filter by status">
+        <ul class="flex flex-wrap gap-2">
+          <li>
+            <Button isLink size="xs" variant={status ? "muted" : "default"} href="/properties" class="w-fit">
+              All
+            </Button>
+          </li>
+          {
+            Object.entries(statusLabels)
+              .filter(([key]) => statuses.has(key))
+              .map(([key, name]) => (
+                <li>
+                  <Button
+                    isLink
+                    size="xs"
+                    variant={key === status ? "default" : "muted"}
+                    href={`/properties/${key}`}
+                    class="w-fit"
+                  >
+                    {name}
+                  </Button>
+                </li>
+              ))
+          }
+        </ul>
+      </nav>
+      <div class="flex flex-wrap gap-8" data-property-filters>
+        <label class="flex flex-col gap-1 text-xs text-muted-foreground">
+          Country
+          <select class={selectClass} data-filter="country">
+            <option value="">All countries</option>
+            {countries.map((country) => <option value={country}>{country}</option>)}
+          </select>
+        </label>
+        <label class="flex flex-col gap-1 text-xs text-muted-foreground">
+          City
+          <select class={selectClass} data-filter="city">
+            <option value="">All cities</option>
+            {cities.map((city) => <option value={city}>{city}</option>)}
+          </select>
+        </label>
+      </div>
+    </div>
+    {
+      properties.length > 0 ? (
+        <ul class="grid grid-cols-1 mt-12 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-24" data-property-grid>
+          {properties.map((property) => (
+            <li data-country={property.data.country} data-city={property.data.city}>
+              <ProperySmallCard property={property} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <Text tag="p" variant="textBase" class="mt-12 text-muted-foreground">
+          No homes here right now.
+        </Text>
+      )
+    }
+    <Text tag="p" variant="textBase" class="hidden mt-12 text-muted-foreground" data-property-empty>
+      No homes match these filters.
+    </Text>
+  </Wrapper>
+</section>
+
+<script>
+  const country = document.querySelector<HTMLSelectElement>('[data-filter="country"]');
+  const city = document.querySelector<HTMLSelectElement>('[data-filter="city"]');
+  const items = document.querySelectorAll<HTMLElement>("[data-property-grid] > li");
+  const empty = document.querySelector<HTMLElement>("[data-property-empty]");
+
+  const apply = () => {
+    let visible = 0;
+    items.forEach((item) => {
+      const show =
+        (!country?.value || item.dataset.country === country.value) &&
+        (!city?.value || item.dataset.city === city.value);
+      item.hidden = !show;
+      if (show) visible += 1;
+    });
+    empty?.classList.toggle("hidden", visible > 0 || items.length === 0);
+  };
+
+  const syncCities = () => {
+    if (!city || !country) return;
+    const available = new Set(
+      [...items]
+        .filter((item) => !country.value || item.dataset.country === country.value)
+        .map((item) => item.dataset.city)
+    );
+    [...city.options].forEach((option) => {
+      option.hidden = option.value !== "" && !available.has(option.value);
+    });
+    if (city.value && !available.has(city.value)) city.value = "";
+  };
+
+  country?.addEventListener("change", () => {
+    syncCities();
+    apply();
+  });
+  city?.addEventListener("change", apply);
+</script>

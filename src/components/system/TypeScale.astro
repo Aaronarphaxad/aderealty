@@ -1,0 +1,68 @@
+---
+// Fundations
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+import Text from "@/components/fundations/elements/Text.astro";
+
+const groups = [
+  {
+    title: "Display",
+    sample: "Homes by the water",
+    style: "font-semibold leading-none tracking-tight uppercase",
+    items: [
+      { variant: "display6XL", name: "Display 6XL" },
+      { variant: "display5XL", name: "Display 5XL" },
+      { variant: "display4XL", name: "Display 4XL" },
+      { variant: "display3XL", name: "Display 3XL" },
+      { variant: "display2XL", name: "Display 2XL" },
+      { variant: "displayXL", name: "Display XL" },
+      { variant: "displayLG", name: "Display LG" },
+      { variant: "displayMD", name: "Display MD" },
+      { variant: "displaySM", name: "Display SM" },
+      { variant: "displayXS", name: "Display XS" },
+    ],
+  },
+  {
+    title: "Text",
+    sample: "Three bedrooms over two floors in Østerbro, with a south-facing balcony and the lakes a short walk away.",
+    style: "",
+    items: [
+      { variant: "textXL", name: "Text XL" },
+      { variant: "textLG", name: "Text LG" },
+      { variant: "textBase", name: "Text Base" },
+      { variant: "textSM", name: "Text SM" },
+      { variant: "textXS", name: "Text XS" },
+      { variant: "textXXS", name: "Text XXS" },
+    ],
+  },
+];
+---
+
+{
+  groups.map((group) => (
+    <section>
+      <Wrapper variant="standard" class="pb-24">
+        <div class="pt-12 border-t border-border">
+          <HeadingWrapper text={group.title}>
+            <ul class="flex flex-col divide-y divide-border">
+              {group.items.map((item) => (
+                <li class="py-6 first:pt-0">
+                  <Text tag="p" variant="textXS" class="text-muted-foreground">
+                    {item.name}
+                  </Text>
+                  <Text
+                    tag="p"
+                    variant={item.variant}
+                    class:list={["mt-2 text-foreground text-balance", group.style]}
+                  >
+                    {group.sample}
+                  </Text>
+                </li>
+              ))}
+            </ul>
+          </HeadingWrapper>
+        </div>
+      </Wrapper>
+    </section>
+  ))
+}

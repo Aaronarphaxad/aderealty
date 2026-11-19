@@ -1,0 +1,26 @@
+---
+// Fundations
+import BaseLayout from "@/layouts/BaseLayout.astro";
+// Content
+import { getCollection } from "astro:content";
+import RelatedPosts from "@/components/blog/RelatedPosts.astro";
+import PostBody from "@/components/blog/PostBody.astro";
+import PostHero from "@/components/blog/PostHero.astro";
+const { frontmatter } = Astro.props;
+
+const relatedPosts = (await getCollection("posts"))
+  .filter((post) => post.data.title !== frontmatter.title)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+---
+
+<BaseLayout>
+  <PostHero frontmatter={frontmatter} />
+  <PostBody>
+    <slot />
+  </PostBody>
+  {
+    relatedPosts.length > 0 && (
+      <RelatedPosts relatedPosts={relatedPosts} />
+    )
+  }
+</BaseLayout>

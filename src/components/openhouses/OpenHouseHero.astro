@@ -1,0 +1,59 @@
+---
+import { Image } from "astro:assets";
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+const { frontmatter, propertyData, formattedDate } = Astro.props;
+---
+
+<section>
+  <Wrapper variant="standard" class="pt-24 pb-8 lg:pt-48">
+    <HeadingWrapper text="Open house">
+      <Text
+        tag="h1"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        {frontmatter.title}
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-pretty">
+        Join us for an exclusive viewing of this exceptional property.
+        {frontmatter.note}
+      </Text>
+      <div class="mt-8">
+        <Text tag="h3" variant="textBase" class="font-medium text-foreground">
+          {propertyData?.address}
+        </Text>
+        <Text tag="p" variant="textBase" class="text-muted-foreground">
+          {propertyData?.city}{
+            propertyData?.region && `, ${propertyData.region}`
+          }{propertyData?.country && `, ${propertyData.country}`}
+        </Text>
+        <Text
+          tag="p"
+          variant="textBase"
+          class="flex gap-6 text-muted-foreground mt-2"
+        >
+          {formattedDate} at
+          <span>{frontmatter.startTime} - {frontmatter.endTime}</span>
+        </Text>
+      </div>
+    </HeadingWrapper>
+    {
+      propertyData?.coverImage && (
+        <Image
+          src={propertyData.coverImage.url}
+          alt={propertyData.coverImage.alt}
+          width={1480}
+          height={1200}
+          loading="eager"
+          fetchpriority="high"
+          widths={[640, 1024, 1480]}
+          sizes="100vw"
+          decoding="async"
+          class="object-cover size-full object-center mt-12 rounded-2xl"
+        />
+      )
+    }
+  </Wrapper>
+</section>

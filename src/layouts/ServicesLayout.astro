@@ -1,0 +1,11 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ServiceDetail from "@/components/services/ServiceDetail.astro";
+const { frontmatter } = Astro.props;
+---
+
+<BaseLayout>
+  <ServiceDetail frontmatter={frontmatter}>
+    <slot />
+  </ServiceDetail>
+</BaseLayout>

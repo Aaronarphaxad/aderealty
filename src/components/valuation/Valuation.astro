@@ -1,0 +1,21 @@
+---
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+
+import Aside from "@/components/valuation/Aside.astro";
+import ValuationForm from "@/components/forms/ValuationForm.astro";
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+      <!-- Information Sidebar -->
+      <div class="md:lg:col-span-3">
+        <Aside />
+      </div>
+      <!-- Valuation Form -->
+      <div class="lg:col-span-9">
+        <ValuationForm />
+      </div>
+    </div>
+  </Wrapper>
+</section>

@@ -1,0 +1,56 @@
+---
+// Assets
+import { Image } from "astro:assets";
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+
+const { story } = Astro.props;
+const { name, role, quote, outcome, salePrice, daysOnMarket, photo } = story.data;
+---
+
+<article class="relative grid grid-cols-1 gap-8 lg:grid-cols-2 group">
+  <a
+    href={`/stories/${story.id}`}
+    aria-label={`Read the story: ${name}`}
+    class="absolute inset-0 z-10"></a>
+  <div class="relative overflow-hidden rounded-lg lg:order-last aspect-square">
+    <Image
+      width={900}
+      height={900}
+      src={photo.url}
+      alt={photo.alt}
+      loading="lazy"
+      decoding="async"
+      class="object-cover w-full duration-300 ease-out size-full group-hover:scale-105"
+    />
+  </div>
+  <div class="flex flex-col justify-between h-full gap-8">
+    <Text
+      tag="p"
+      variant="textXL"
+      class="font-medium leading-tight tracking-tight text-foreground text-pretty"
+    >
+      {quote}
+    </Text>
+    <div>
+      <div class="pl-4 border-l border-border">
+        <Text tag="h3" variant="textBase" class="font-medium text-foreground">
+          {name}
+        </Text>
+        <Text tag="p" variant="textXS" class="text-muted-foreground">
+          {role}
+        </Text>
+      </div>
+      <dl class="grid grid-cols-2 gap-8 pt-4 mt-8 border-t border-border">
+        <div>
+          <dt class="text-xs text-muted-foreground">{outcome === "sold" ? "Sold for" : "Bought for"}</dt>
+          <dd class="mt-1 text-sm font-medium text-foreground">€{salePrice.toLocaleString("en-US")}</dd>
+        </div>
+        <div>
+          <dt class="text-xs text-muted-foreground">Days on market</dt>
+          <dd class="mt-1 text-sm font-medium text-foreground">{daysOnMarket}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</article>

@@ -1,0 +1,133 @@
+---
+// Structured data for Google: who Ade is, where he works and what the page covers.
+// Only facts that are also visible on the page belong here. Do not add reviews or ratings:
+// Google ignores self-published ones for local businesses and can penalize invented ones.
+import { getImage } from "astro:assets";
+import Portrait from "@/images/agent/portrait.jpg";
+import HeroHouse from "@/images/agent/hero-house.jpg";
+import { agent, areas, faqs, paths, seo, teamRecord, SITE_URL } from "@/lib/agent";
+
+const home = `${SITE_URL}/`;
+const id = (name: string) => `${home}#${name}`;
+const absolute = (path: string) => new URL(path, SITE_URL).href;
+
+const portrait = absolute((await getImage({ src: Portrait, format: "jpg" })).src);
+const cover = absolute((await getImage({ src: HeroHouse, width: 1200, height: 630, format: "jpg" })).src);
+const telephone = agent.cell.href.replace("tel:", "");
+// Placeholder social links ("#_") are left out until the real profiles are added
+const profiles = [agent.agentPageUrl, ...agent.socials.map((social) => social.href).filter((href) => href.startsWith("http"))];
+const { awards } = teamRecord;
+
+const graph = [
+  {
+    "@type": "WebSite",
+    "@id": id("website"),
+    url: home,
+    name: `${agent.name}, ${agent.title}`,
+    alternateName: agent.brand,
+    inLanguage: "en-CA",
+    publisher: { "@id": id("agent") },
+  },
+  {
+    "@type": "WebPage",
+    "@id": id("webpage"),
+    url: home,
+    name: seo.title,
+    description: seo.description,
+    inLanguage: "en-CA",
+    isPartOf: { "@id": id("website") },
+    about: { "@id": id("agent") },
+    primaryImageOfPage: cover,
+  },
+  {
+    "@type": "RealEstateAgent",
+    "@id": id("agent"),
+    name: agent.name,
+    alternateName: agent.brand,
+    description: seo.description,
+    url: home,
+    image: [portrait, cover],
+    logo: absolute("/icon-512.png"),
+    telephone,
+    email: agent.email.label,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: agent.address.street,
+      addressLocality: agent.address.city,
+      addressRegion: agent.address.region,
+      postalCode: agent.address.postalCode,
+      addressCountry: agent.address.country,
+    },
+    geo: { "@type": "GeoCoordinates", ...agent.geo },
+    areaServed: [
+      { "@type": "AdministrativeArea", name: "Metro Vancouver", containedInPlace: { "@type": "AdministrativeArea", name: "British Columbia" } },
+      { "@type": "AdministrativeArea", name: "Fraser Valley", containedInPlace: { "@type": "AdministrativeArea", name: "British Columbia" } },
+      { "@type": "AdministrativeArea", name: "Lower Mainland", containedInPlace: { "@type": "AdministrativeArea", name: "British Columbia" } },
+      ...areas.map((name) => ({
+        "@type": "City",
+        name,
+        containedInPlace: { "@type": "AdministrativeArea", name: "British Columbia" },
+      })),
+    ],
+    knowsLanguage: agent.languages,
+    employee: { "@id": id("person") },
+    memberOf: {
+      "@type": "Organization",
+      name: agent.team,
+      url: "https://www.katrinaandtheteam.com/",
+      award: awards.titles.map((title) => `#1 ${title}, ${awards.year} Fraser Valley Real Estate Board awards`),
+    },
+    parentOrganization: { "@type": "Organization", name: agent.brokerageLegal },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Real estate services in Surrey and the Lower Mainland",
+      itemListElement: paths.map((path) => ({
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: path.title,
+          description: path.lead,
+          areaServed: { "@type": "AdministrativeArea", name: "Lower Mainland" },
+          provider: { "@id": id("agent") },
+        },
+      })),
+    },
+    sameAs: profiles,
+  },
+  {
+    "@type": "Person",
+    "@id": id("person"),
+    name: agent.name,
+    alternateName: agent.shortName,
+    jobTitle: agent.title,
+    description: `${agent.name} is a ${agent.title} in ${agent.address.city}, BC, helping buyers and sellers across the Lower Mainland.`,
+    image: portrait,
+    url: home,
+    telephone,
+    worksFor: { "@id": id("agent") },
+    workLocation: { "@type": "Place", name: `${agent.address.city}, ${agent.address.region}` },
+    knowsLanguage: agent.languages,
+    knowsAbout: [
+      "Residential real estate",
+      "Surrey real estate",
+      "Lower Mainland BC real estate",
+      "Fraser Valley real estate",
+      ...paths.map((path) => path.title),
+    ],
+    hasCredential: { "@type": "EducationalOccupationalCredential", credentialCategory: "degree", name: "MBA" },
+    sameAs: profiles,
+  },
+  {
+    "@type": "FAQPage",
+    "@id": id("faq"),
+    isPartOf: { "@id": id("webpage") },
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: { "@type": "Answer", text: faq.answer },
+    })),
+  },
+];
+---
+
+<script type="application/ld+json" set:html={JSON.stringify({ "@context": "https://schema.org", "@graph": graph })} />

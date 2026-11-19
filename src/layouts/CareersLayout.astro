@@ -1,0 +1,11 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ApplyForm from "@/components/careers/ApplyForm.astro";
+import CareerDetail from "@/components/careers/CareerDetail.astro";
+const { frontmatter } = Astro.props;
+---
+
+<BaseLayout>
+  <CareerDetail frontmatter={frontmatter} />
+  <ApplyForm />
+</BaseLayout>

@@ -1,0 +1,64 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+
+const howItems = [
+  {
+    title: "A price within 48 hours",
+    description: "One honest number, based on recent sales on your street, not the highest figure that wins the listing.",
+  },
+  {
+    title: "Photos and floor plan in week one",
+    description: "A photographer, a floor plan and the energy certificate, booked by us and live within seven days.",
+  },
+  {
+    title: "Viewings and open houses",
+    description: "Private viewings in the week, an open house at the weekend, and feedback from every visit the same evening.",
+  },
+  {
+    title: "Offer, contract and keys",
+    description: "We run the bidding, check the buyer's financing and stay with you until the keys change hands.",
+  },
+];
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24">
+    <Text
+      tag="h2"
+      variant="displayLG"
+      class="font-semibold leading-none text-foreground tracking-tight text-balance uppercase"
+    >
+      How we sell
+    </Text>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-12">
+      {
+        howItems.map((item, index) => (
+          <article>
+            <Text
+              tag="span"
+              variant="displayXL"
+              class="font-semibold leading-none tracking-tighter text-foreground"
+            >
+              0{index + 1}
+            </Text>
+            <div class="pt-2 border-t border-border">
+              <Text
+                tag="h3"
+                variant="textBase"
+                class="font-medium text-foreground"
+              >
+                {item.title}
+              </Text>
+              <Text tag="p" variant="textSM" class="text-muted-foreground text-pretty">
+                {item.description}
+              </Text>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </Wrapper>
+</section>

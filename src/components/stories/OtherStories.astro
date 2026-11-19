@@ -1,0 +1,25 @@
+---
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import FancyLink from "@/components/fundations/elements/FancyLink.astro";
+import StoryCard from "@/components/stories/StoryCard.astro";
+const { otherStories } = Astro.props;
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24">
+    <div class="flex flex-wrap gap-4 lg:items-end lg:justify-between">
+      <Text
+        tag="h2"
+        variant="displayLG"
+        class="font-semibold leading-none uppercase text-foreground tracking-tight text-balance"
+      >
+        More stories
+      </Text>
+      <FancyLink href="/stories">All stories</FancyLink>
+    </div>
+    <div class="grid grid-cols-1 mt-12 lg:grid-cols-3 gap-x-8 gap-y-12">
+      {otherStories.slice(0, 3).map((story) => <StoryCard story={story} />)}
+    </div>
+  </Wrapper>
+</section>

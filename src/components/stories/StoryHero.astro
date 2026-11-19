@@ -1,0 +1,46 @@
+---
+import { Image } from "astro:assets";
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+const { frontmatter, facts } = Astro.props;
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24 lg:pt-48">
+    <HeadingWrapper text="Story">
+      <Text
+        tag="h1"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        {frontmatter.name}
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-pretty">
+        {frontmatter.quote}
+      </Text>
+      <dl class="grid grid-cols-1 gap-8 pt-4 mt-12 border-t sm:grid-cols-3 border-border">
+        {
+          facts.map((fact) => (
+            <div>
+              <dt class="text-xs text-muted-foreground">{fact.label}</dt>
+              <dd class="mt-1 text-base font-medium text-foreground">{fact.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </HeadingWrapper>
+    <Image
+      src={frontmatter.photo.url}
+      alt={frontmatter.photo.alt}
+      width={1480}
+      height={1000}
+      loading="eager"
+      fetchpriority="high"
+      widths={[640, 1024, 1480]}
+      sizes="100vw"
+      decoding="async"
+      class="object-cover object-center w-full mt-12 rounded-lg aspect-video"
+    />
+  </Wrapper>
+</section>

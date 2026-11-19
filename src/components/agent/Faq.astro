@@ -1,0 +1,51 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Button from "@/components/fundations/elements/Button.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import Plus from "@/components/fundations/icons/Plus.astro";
+// Components
+import SectionHeading from "@/components/agent/SectionHeading.astro";
+// Data
+import { agent, faqs } from "@/lib/agent";
+---
+
+<section id="faq" class="scroll-mt-20">
+  <Wrapper variant="standard" class="py-24">
+    <div class="grid grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-3">
+      <div class="flex flex-col justify-between gap-12">
+        <SectionHeading title="Questions" />
+        <div class="flex flex-col gap-8 p-6 rounded-2xl bg-muted">
+          <div>
+            <Text tag="h3" variant="textBase" class="font-medium text-foreground">
+              Something else on your mind?
+            </Text>
+            <Text tag="p" variant="textSM" class="mt-1 text-muted-foreground text-pretty">
+              {`Call or text ${agent.shortName} and ask. A straight answer costs nothing.`}
+            </Text>
+          </div>
+          <Button isLink={true} href={agent.cell.href} variant="default" size="sm" class="w-fit">
+            {agent.cell.label}
+          </Button>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2 lg:col-span-2">
+        {
+          faqs.map((faq) => (
+            <details class="px-6 rounded-2xl group bg-muted">
+              <summary class="flex items-center justify-between gap-8 py-5 list-none cursor-pointer">
+                <Text tag="h3" variant="textBase" class="font-medium text-foreground">
+                  {faq.question}
+                </Text>
+                <Plus class="size-4 shrink-0 text-muted-foreground group-open:rotate-45" />
+              </summary>
+              <Text tag="p" variant="textSM" class="max-w-2xl pb-5 text-muted-foreground text-pretty">
+                {faq.answer}
+              </Text>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </Wrapper>
+</section>

@@ -1,0 +1,259 @@
+---
+import { Image } from "astro:assets";
+import Text from "@/components/fundations/elements/Text.astro";
+import Button from "@/components/fundations/elements/Button.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+const { frontmatter, propertyData, agentData, neighborhoodName } = Astro.props;
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24 space-y-24">
+    <HeadingWrapper text="Property information">
+      <dl class="divide-y divide-border">
+        <div class="flex justify-between py-2">
+          <dt class="text-muted-foreground text-sm">Bedrooms</dt>
+          <dd class="font-medium capitalize text-sm text-muted-foreground">
+            {propertyData.bedrooms}
+          </dd>
+        </div>
+        <div class="flex justify-between py-2">
+          <dt class="text-muted-foreground text-sm">Bathrooms</dt>
+          <dd class="font-medium capitalize text-sm text-muted-foreground">
+            {propertyData.bathrooms}
+          </dd>
+        </div>
+        <div class="flex justify-between py-2">
+          <dt class="text-muted-foreground text-sm">Living area</dt>
+          <dd class="font-medium capitalize text-sm text-muted-foreground">
+            {propertyData.areaSqm} m²
+          </dd>
+        </div>
+        <div class="flex justify-between py-2">
+          <dt class="text-muted-foreground text-sm">Type</dt>
+          <dd class="font-medium capitalize text-sm text-muted-foreground">
+            {propertyData.propertyType}
+          </dd>
+        </div>
+        <div class="flex justify-between py-2">
+          <dt class="text-muted-foreground text-sm">Year built</dt>
+          <dd class="font-medium capitalize text-sm text-muted-foreground">
+            {propertyData.yearBuilt}
+          </dd>
+        </div>
+        <div class="flex justify-between py-2">
+          <dt class="text-muted-foreground text-sm">Lot size</dt>
+          <dd class="font-medium capitalize text-sm text-muted-foreground">
+            {propertyData.lotSqm} m²
+          </dd>
+        </div>
+        <div class="flex justify-between py-2">
+          <dt class="text-muted-foreground text-sm">Postal code</dt>
+          <dd class="font-medium capitalize text-sm text-muted-foreground">
+            {propertyData.postalCode}
+          </dd>
+        </div>
+        <div class="flex justify-between py-2">
+          <dt class="text-muted-foreground text-sm">Listed</dt>
+          <dd class="font-medium capitalize text-sm text-muted-foreground">
+            {
+              new Date(propertyData.pubDate).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })
+            }
+          </dd>
+        </div>
+        {neighborhoodName && (
+          <div class="flex justify-between py-2">
+            <dt class="text-sm text-muted-foreground">Neighborhood</dt>
+            <dd class="text-sm font-medium text-muted-foreground">
+              <a
+                href={`/neighborhoods/${propertyData.neighborhood}`}
+                class="text-sm transition-colors text-accent hover:text-accent/80"
+              >
+                {neighborhoodName}
+              </a>
+            </dd>
+          </div>
+        )}
+      </dl>
+      <Button
+        isLink
+        size="sm"
+        variant="default"
+        href={`/properties/${propertyData.status}/${frontmatter.property}`}
+        class="w-fit mt-8"
+      >
+        View full property details
+      </Button>
+    </HeadingWrapper>
+
+    {
+      propertyData?.coordinates && (
+        <HeadingWrapper text="Location">
+          <div class="w-full overflow-hidden rounded-lg aspect-video grayscale">
+            <iframe
+              width="100%"
+              height="100%"
+              frameborder="0"
+              style="border:0"
+              src={`https://maps.google.com/maps?q=${propertyData.coordinates.lat},${propertyData.coordinates.lng}&z=15&output=embed`}
+              allowfullscreen
+            />
+          </div>
+        </HeadingWrapper>
+      )
+    }
+
+    {
+      agentData && (
+        <HeadingWrapper text="Contact agent">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Image
+              src={agentData.photo.url}
+              alt={agentData.name}
+              width={800}
+              height={800}
+              class="object-cover w-full rounded-lg aspect-square"
+            />
+            <div class="flex flex-col h-full gap-8 justify-between">
+              <div class="pl-4 border-l border-border">
+                <Text
+                  tag="h3"
+                  variant="textBase"
+                  class="font-medium text-foreground"
+                >
+                  {agentData.name}
+                </Text>
+                <Text tag="p" variant="textXS" class="text-muted-foreground">
+                  {agentData.role}
+                </Text>
+                <div class="mt-4">
+                  <a
+                    href="#_"
+                    class="block text-xs text-muted-foreground hover:text-accent transition-colors"
+                  >
+                    {agentData.phone}
+                  </a>
+                  <a
+                    href="#_"
+                    class="block text-xs text-muted-foreground hover:text-accent transition-colors"
+                  >
+                    {agentData.email}
+                  </a>
+                </div>
+              </div>
+              <Button
+                isLink
+                size="sm"
+                variant="default"
+                href={`/agents/${propertyData.agent}`}
+                class="w-fit"
+              >
+                View full profile
+              </Button>
+            </div>
+          </div>
+        </HeadingWrapper>
+      )
+    }
+
+    <HeadingWrapper text="Register your attendance">
+      <Text
+        tag="h2"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        Fill out the form below and {agentData?.name || "our agent"} will get back
+        to you shortly.
+      </Text>
+      <form class="mt-24">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-y-12 gap-x-8">
+          <div class="space-y-1 lg:col-span-2">
+            <label for="preference" class="block text-sm text-foreground">
+              What can we help you with?
+            </label>
+            <select
+              id="preference"
+              name="preference"
+              class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+            >
+              <option value="rsvp">RSVP for open house</option>
+              <option value="brochure">Request brochure</option>
+              <option value="callback">Call back</option>
+              <option value="viewing">Arrange private viewing</option>
+            </select>
+          </div>
+          <div class="space-y-1">
+            <label for="firstName" class="block text-sm text-foreground">
+              First name
+            </label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              placeholder="First name"
+              class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+              required
+            />
+          </div>
+          <div class="space-y-1">
+            <label for="lastName" class="block text-sm text-foreground">
+              Last name
+            </label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              placeholder="Last name"
+              class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+              required
+            />
+          </div>
+          <div class="space-y-1">
+            <label for="email" class="block text-sm text-foreground">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Your email address"
+              class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+              required
+            />
+          </div>
+          <div class="space-y-1">
+            <label for="phone" class="block text-sm text-foreground">
+              Phone
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              placeholder="Phone number"
+              class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+            />
+          </div>
+          <div class="space-y-1 lg:col-span-2">
+            <label for="message" class="block text-sm text-foreground">
+              Message (optional)
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              rows="4"
+              placeholder="I'm interested in attending this open house and would love to get more information about the property. Please reach out."
+              class="w-full px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none resize-none"
+            ></textarea>
+          </div>
+        </div>
+        <Button variant="muted" size="xs" type="submit" class="w-fit mt-8">
+          Send inquiry
+        </Button>
+      </form>
+    </HeadingWrapper>
+  </Wrapper>
+</section>

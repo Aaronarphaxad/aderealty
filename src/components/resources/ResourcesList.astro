@@ -1,0 +1,33 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+// Components
+import ResourcesCard from "@/components/resources/ResourcesCard.astro";
+// Content
+import { getCollection } from "astro:content";
+const resources = (await getCollection("resources")).sort(
+  (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+);
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24 lg:pt-48">
+    <HeadingWrapper text="Resources">
+      <Text
+        tag="h1"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        Guides for buyers and sellers
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-balance">
+        Plain answers on budgets, financing, pricing and what happens between the first viewing and the final keys.
+      </Text>
+      <div class="mt-12 border-y border-border divide-y divide-border">
+        {resources.map((resource) => <ResourcesCard resource={resource} />)}
+      </div>
+    </HeadingWrapper>
+  </Wrapper>
+</section>

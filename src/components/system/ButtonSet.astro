@@ -1,0 +1,63 @@
+---
+// Fundations
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+import Button from "@/components/fundations/elements/Button.astro";
+// Icons
+import Plus from "@/components/fundations/icons/Plus.astro";
+
+interface Props {
+  isLink?: boolean;
+}
+const { isLink = false } = Astro.props;
+const linkProps = isLink ? { isLink: true, href: "#_" } : { type: "button" };
+const variants = [
+  { variant: "default", name: "Default" },
+  { variant: "accent", name: "Accent" },
+  { variant: "muted", name: "Muted" },
+  { variant: "mutedDark", name: "Muted dark" },
+  { variant: "none", name: "None" },
+];
+const sizes = [
+  { size: "xxs", name: "XXS", icon: "sm" },
+  { size: "xs", name: "XS", icon: "sm" },
+  { size: "sm", name: "SM", icon: "base" },
+  { size: "base", name: "Base", icon: "base" },
+  { size: "md", name: "MD", icon: "lg" },
+  { size: "lg", name: "LG", icon: "xl" },
+  { size: "xl", name: "XL", icon: "xl" },
+];
+---
+
+{
+  variants.map((item) => (
+    <section>
+      <Wrapper variant="standard" class="pb-24">
+        <div class="pt-12 border-t border-border">
+          <HeadingWrapper text={item.name}>
+            <div class="flex flex-wrap items-center gap-4">
+              {sizes.map((size) => (
+                <Button {...linkProps} variant={item.variant} size={size.size} class="w-fit">
+                  {size.name}
+                </Button>
+              ))}
+            </div>
+            <div class="flex flex-wrap items-center gap-4 mt-8">
+              {sizes.map((size) => (
+                <Button
+                  {...linkProps}
+                  variant={item.variant}
+                  size={size.size}
+                  iconOnly
+                  aria-label={`Add, ${size.name}`}
+                >
+                  <Plus slot="icon" size={size.icon} />
+                </Button>
+              ))}
+            </div>
+          </HeadingWrapper>
+        </div>
+      </Wrapper>
+    </section>
+  ))
+}

@@ -1,0 +1,49 @@
+---
+import Text from "@/components/fundations/elements/Text.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+import Button from "@/components/fundations/elements/Button.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+
+const links = [
+  { name: "Homes for sale", href: "/properties/for-sale" },
+  { name: "Open houses", href: "/open-houses" },
+  { name: "Neighborhoods", href: "/neighborhoods" },
+  { name: "Agents", href: "/agents" },
+];
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24 lg:pt-48">
+    <HeadingWrapper text="Page not found">
+      <Text
+        tag="h1"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        This address is no longer available.
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-balance">
+        The home may have sold or the link may be out of date. Start again from the home page or pick up where most people do.
+      </Text>
+      <div class="flex flex-wrap gap-2 mt-8">
+        <Button href="/" isLink variant="default" size="sm" class="w-full md:w-fit">
+          Go back home
+        </Button>
+        <Button href="/book-a-call" isLink variant="muted" size="sm" class="w-full md:w-fit">
+          Book a call
+        </Button>
+      </div>
+      <ul class="grid grid-cols-2 gap-8 pt-8 mt-24 border-t md:grid-cols-4 border-border" role="list">
+        {
+          links.map((link) => (
+            <li>
+              <a href={link.href} class="text-sm font-medium transition-colors text-foreground hover:text-accent">
+                {link.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </HeadingWrapper>
+  </Wrapper>
+</section>

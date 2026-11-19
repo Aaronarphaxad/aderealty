@@ -1,0 +1,205 @@
+---
+import Text from "@/components/fundations/elements/Text.astro";
+import Button from "@/components/fundations/elements/Button.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div>
+        <Text
+          tag="h2"
+          variant="displayLG"
+          class="font-semibold leading-none text-foreground tracking-tight text-balance uppercase"
+        >
+          Apply for this Position
+        </Text>
+        <Text tag="p" variant="textSM" class="text-muted-foreground">
+          Submit your application and we'll get back to you shortly.
+        </Text>
+      </div>
+      <form class="lg:col-span-2">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-y-12 gap-x-8">
+          <div class="space-y-1">
+            <label for="name" class="block text-sm text-foreground">
+              Full Name *
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              placeholder="Elin Norrby"
+              class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+            />
+          </div>
+
+          <div class="space-y-1">
+            <label for="email" class="block text-sm text-foreground">
+              Email Address *
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="elin@norrby.test"
+              class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+            />
+          </div>
+
+          <div class="space-y-1">
+            <label for="phone" class="block text-sm text-foreground">
+              Phone Number *
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              required
+              placeholder="+45 00 00 00 00"
+              class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+            />
+          </div>
+
+          <div class="space-y-1">
+            <label for="linkedin" class="block text-sm text-foreground">
+              LinkedIn profile
+            </label>
+            <input
+              type="url"
+              id="linkedin"
+              name="linkedin"
+              placeholder="https://linkedin.com/in/yourprofile"
+              class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+            />
+          </div>
+
+          <div class="space-y-1">
+            <label for="salaryExpectations" class="block text-sm text-foreground">
+              Salary Expectations (Optional)
+            </label>
+            <input
+              type="text"
+              id="salaryExpectations"
+              name="salaryExpectations"
+              placeholder="e.g., DKK 450,000 - 550,000"
+              class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+            />
+          </div>
+
+          <div class="space-y-1">
+            <label for="startDate" class="block text-sm text-foreground">
+              Earliest Start Date *
+            </label>
+            <input
+              type="date"
+              id="startDate"
+              name="startDate"
+              required
+              class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+            />
+          </div>
+
+          <div class="space-y-1">
+            <label for="source" class="block text-sm text-foreground">
+              How did you hear about us?
+            </label>
+            <select
+              id="source"
+              name="source"
+              class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+            >
+              <option value="">Select an option</option>
+              <option value="website">Company website</option>
+              <option value="linkedin">LinkedIn</option>
+              <option value="job-board">Job board</option>
+              <option value="referral">Employee referral</option>
+              <option value="social-media">Social media</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="space-y-1 lg:col-span-2">
+            <label for="resume" class="block text-sm text-foreground">
+              Resume/CV *
+            </label>
+            <div
+              class="relative p-6 border-2 border-dashed rounded-lg border-border hover:border-accent transition-colors"
+            >
+              <input
+                type="file"
+                id="resume"
+                name="resume"
+                accept=".pdf,.doc,.docx"
+                required
+                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <div class="text-center">
+                <div class="mb-2 text-3xl">📄</div>
+                <Text tag="p" variant="textSM" class="text-muted-foreground">
+                  Click to upload or drag and drop
+                </Text>
+                <Text tag="p" variant="textXS" class="mt-1 text-muted-foreground">
+                  PDF, DOC, DOCX up to 10MB
+                </Text>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-1 lg:col-span-2">
+            <label for="coverLetter" class="block text-sm text-foreground">
+              Cover Letter *
+            </label>
+            <textarea
+              id="coverLetter"
+              name="coverLetter"
+              required
+              rows="6"
+              placeholder="Tell us why you're a great fit for this position..."
+              class="w-full px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none resize-none"
+            ></textarea>
+          </div>
+
+          <div class="space-y-1 lg:col-span-2">
+            <label for="additionalInfo" class="block text-sm text-foreground">
+              Additional information
+            </label>
+            <textarea
+              id="additionalInfo"
+              name="additionalInfo"
+              rows="4"
+              placeholder="Any additional information you'd like to share..."
+              class="w-full px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none resize-none"
+            ></textarea>
+          </div>
+        </div>
+        <div class="space-y-1 lg:col-span-2 mt-1">
+          <div class="flex items-start lg:items-center gap-3">
+            <input
+              type="checkbox"
+              id="consent"
+              name="consent"
+              required
+              class="size-3 rounded-full text-accent border-border focus:ring-accent"
+            />
+            <label for="consent" class="text-xs text-foreground">
+              I agree to the processing of my personal data for recruitment
+              purposes in accordance with the <a
+                href="/legal/privacy-policy"
+                class="underline text-accent hover:text-accent/80"
+                >Privacy policy</a
+              >. *
+            </label>
+          </div>
+        </div>
+        <div class="flex items-center mt-12 gap-12">
+          <Button variant="muted" size="xs" type="submit" class="w-fit">
+            Submit application
+          </Button>
+        </div>
+      </form>
+    </div>
+  </Wrapper>
+</section>

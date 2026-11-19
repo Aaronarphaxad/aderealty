@@ -1,0 +1,14 @@
+---
+// Fundations
+import BaseLayout from "@/layouts/BaseLayout.astro";
+// Components
+import Header from "@/components/system/Header.astro";
+import ButtonSet from "@/components/system/ButtonSet.astro";
+import TextLinks from "@/components/system/TextLinks.astro";
+---
+
+<BaseLayout>
+  <Header title="Links" text="The fancy link for inline calls to action, plus every button variant rendered as a link." />
+  <TextLinks />
+  <ButtonSet isLink />
+</BaseLayout>

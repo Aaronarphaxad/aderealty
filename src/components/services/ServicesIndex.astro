@@ -1,0 +1,85 @@
+---
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+import ServiceCard from "@/components/services/ServiceCard.astro";
+import { getCollection } from "astro:content";
+
+const allServices = await getCollection("services");
+
+allServices.sort((a, b) => {
+  const priorityA = a.data.priority ?? 999;
+  const priorityB = b.data.priority ?? 999;
+  return priorityA - priorityB;
+});
+
+const servicesByCategory = allServices.reduce(
+  (acc, service) => {
+    const category = service.data.category || "other";
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(service);
+    return acc;
+  },
+  {} as Record<string, typeof allServices>
+);
+
+const categoryNames: Record<string, string> = {
+  buying: "Buying services",
+  selling: "Selling services",
+  renting: "Rental services",
+  investing: "Investment services",
+  other: "Other services",
+};
+
+const categoryOrder = ["buying", "selling", "renting", "investing", "other"];
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24 lg:pt-48">
+    <HeadingWrapper text="services">
+      <Text
+        tag="h1"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        All services
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-balance">
+        Whether you're buying, selling, renting, or investing, we provide
+        comprehensive real estate services tailored to your needs.
+      </Text>
+    </HeadingWrapper>
+
+    <div class="mt-24">
+      <HeadingWrapper text="All services">
+        <div class="space-y-24">
+          {
+            categoryOrder.map((category) => {
+              const services = servicesByCategory[category];
+              if (!services || services.length === 0) return null;
+
+              return (
+                <div>
+                  <Text
+                    tag="h3"
+                    variant="displayMD"
+                    class="font-semibold leading-none text-foreground tracking-tight text-balance"
+                  >
+                    {categoryNames[category] || category}
+                  </Text>
+                  <div class=" grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-24 mt-12 ">
+                    {services.map((service) => (
+                      <ServiceCard service={service} />
+                    ))}
+                  </div>
+                </div>
+              );
+            })
+          }
+        </div>
+      </HeadingWrapper>
+    </div>
+  </Wrapper>
+</section>

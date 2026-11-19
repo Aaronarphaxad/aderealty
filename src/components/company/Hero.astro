@@ -1,0 +1,46 @@
+---
+// Assets
+import { Image } from "astro:assets";
+import company from "@/images/assets/company.png";
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+const storyParagraphs = [
+  "Westend opened in Copenhagen in 2009 with two brokers and one simple idea: honest advice, a fair price and a personal touch on every sale.",
+  "Since then we have sold more than 1,400 homes across Denmark, Sweden, Norway, Finland and Iceland, about ninety of them last year. Most of our clients come to us through someone we have helped before.",
+  "Today we work from four offices, in Copenhagen, Stockholm, Oslo and Helsinki, and we still treat every client like a neighbour and every sale with the care it deserves.",
+];
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24 lg:pt-48">
+    <HeadingWrapper text="Company">
+      <Text
+        tag="h1"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        Westend
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-balance">
+        Since 2009, we have helped people across the Nordics buy, sell and rent homes they love.
+      </Text>
+      <Wrapper variant="prose" class="mt-12 lg:columns-2 gap-x-12">
+        {storyParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+      </Wrapper>
+    </HeadingWrapper>
+    <Image
+      src={company}
+      alt="Luxury interior"
+      width={1480}
+      height={1200}
+      loading="eager"
+      fetchpriority="high"
+      widths={[640, 1024, 1480]}
+      sizes="100vw"
+      decoding="async"
+      class="object-cover size-full object-center mt-12 rounded-2xl"
+    />
+  </Wrapper>
+</section>

@@ -1,0 +1,45 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+import Button from "@/components/fundations/elements/Button.astro";
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24">
+    <HeadingWrapper text="sell with us">
+      <div>
+        <Text
+          tag="h2"
+          variant="displayLG"
+          class="font-semibold leading-none text-foreground tracking-tight text-balance"
+        >
+          Ready to sell your property?
+        </Text>
+        <Text tag="p" variant="textLG" class="mt-8 text-muted-foreground text-pretty">
+          Get the best value for your home with our expert team. Start your free
+          valuation today and discover how we can help you sell quickly and
+          efficiently.
+        </Text>
+      </div>
+      <div class="lg:mt-40 flex flex-wrap gap-2 mt-24">
+        <Button
+          isLink
+          size="sm"
+          variant="accent"
+          href="/valuation"
+          class="md:w-fit w-full"
+          >Get free
+        </Button>
+        <Button
+          isLink
+          size="sm"
+          variant="muted"
+          href="/book-a-call"
+          class="md:w-fit w-full">Book a call</Button
+        >
+      </div>
+    </HeadingWrapper>
+  </Wrapper>
+</section>

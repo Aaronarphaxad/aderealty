@@ -1,0 +1,80 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+// Components
+import SectionHeading from "@/components/agent/SectionHeading.astro";
+// Data
+import { reviews } from "@/lib/agent";
+
+const snippetLength = 200;
+const cards = reviews.map((review) => {
+  const needsExpand = review.quote.length > snippetLength;
+  const snippet = needsExpand
+    ? `${review.quote.slice(0, snippetLength).replace(/\s+\S*$/, "")}…`
+    : review.quote;
+  return { ...review, needsExpand, snippet };
+});
+---
+
+<section id="reviews" class="scroll-mt-20">
+  <Wrapper variant="standard" class="py-24">
+    <SectionHeading title="What clients say">
+      Real words from people Ade has helped buy a home.
+    </SectionHeading>
+    <ul
+      class:list={[
+        "grid grid-cols-1 gap-3 mt-12",
+        cards.length === 2 ? "lg:grid-cols-2" : "lg:grid-cols-3",
+      ]}
+      role="list"
+    >
+      {
+        cards.map((review) => (
+          <li class="flex">
+            <article class="flex flex-col justify-between gap-8 p-6 rounded-2xl grow bg-muted">
+              {
+                review.needsExpand ? (
+                  <details class="group">
+                    <summary class="list-none cursor-pointer [&::-webkit-details-marker]:hidden">
+                      <Text
+                        tag="p"
+                        variant="textLG"
+                        class="text-foreground text-pretty group-open:hidden"
+                      >
+                        {`"${review.snippet}"`}
+                      </Text>
+                      <span class="inline-block mt-4 text-sm font-medium underline transition-colors text-foreground underline-offset-4 group-open:hidden">
+                        Read full review
+                      </span>
+                      <span class="hidden mt-0 text-sm font-medium underline transition-colors text-foreground underline-offset-4 group-open:inline-block">
+                        Show less
+                      </span>
+                    </summary>
+                    <Text tag="p" variant="textLG" class="text-foreground text-pretty">
+                      {`"${review.quote}"`}
+                    </Text>
+                  </details>
+                ) : (
+                  <blockquote>
+                    <Text tag="p" variant="textLG" class="text-foreground text-pretty">
+                      {`"${review.quote}"`}
+                    </Text>
+                  </blockquote>
+                )
+              }
+              <div class="p-4 rounded-xl bg-background">
+                <Text tag="p" variant="textSM" class="font-medium text-foreground">
+                  {review.name}
+                </Text>
+                <Text tag="p" variant="textXS" class="mt-1 text-muted-foreground">
+                  {review.detail}
+                </Text>
+              </div>
+            </article>
+          </li>
+        ))
+      }
+    </ul>
+  </Wrapper>
+</section>

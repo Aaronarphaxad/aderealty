@@ -1,0 +1,31 @@
+---
+// Fundations
+import BaseLayout from "@/layouts/BaseLayout.astro";
+// Content
+import { getCollection, getEntry } from "astro:content";
+import OtherStories from "@/components/stories/OtherStories.astro";
+import StoryBody from "@/components/stories/StoryBody.astro";
+import StoryHero from "@/components/stories/StoryHero.astro";
+const { frontmatter, id } = Astro.props;
+
+const property = await getEntry("properties", frontmatter.property);
+const otherStories = (await getCollection("stories")).filter((story) => story.id !== id);
+const formatPrice = (value: number) => `€${value.toLocaleString("en-US")}`;
+const facts = [
+  { label: "Asking price", value: property?.data.price ? formatPrice(property.data.price) : "On request" },
+  { label: frontmatter.outcome === "sold" ? "Sold for" : "Bought for", value: formatPrice(frontmatter.salePrice) },
+  { label: "Days on market", value: String(frontmatter.daysOnMarket) },
+];
+---
+
+<BaseLayout>
+  <StoryHero frontmatter={frontmatter} facts={facts} />
+  <StoryBody frontmatter={frontmatter} property={property}>
+    <slot />
+  </StoryBody>
+  {
+    otherStories.length > 0 && (
+      <OtherStories otherStories={otherStories} />
+    )
+  }
+</BaseLayout>

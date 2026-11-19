@@ -1,0 +1,21 @@
+@theme {
+  --color-background: oklch(0.985 0 0);
+  --color-foreground: oklch(0.067 0 0);
+  --color-muted: oklch(0.964 0 0);
+  --color-muted-foreground: oklch(0.51 0 0);
+  --color-border: oklch(0.922 0 0);
+  --color-accent: oklch(0.59 0.045 245);
+  /*
+    Card tints, all built from the hero photo's sky (#bbe3e8 = oklch(0.889 0.042 206)).
+    Every tint keeps the sky's lightness and chroma and only turns the hue, so no card
+    looks heavier or louder than another:
+    - sage sits 40 degrees from the sky (analogous)
+    - clay and sand come from the opposite, warm side of the wheel (complementary)
+    Use the full set only in the infographic sections (results, process). Elsewhere cards
+    are bg-muted, with at most one sky card per section.
+  */
+  --color-tint-sky: #bbe3e8;
+  --color-tint-sage: oklch(0.889 0.042 166);
+  --color-tint-clay: oklch(0.889 0.042 50);
+  --color-tint-sand: oklch(0.889 0.042 86);
+}

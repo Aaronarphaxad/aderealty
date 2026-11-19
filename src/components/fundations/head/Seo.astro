@@ -1,0 +1,61 @@
+---
+import { AstroSeo } from "@lexingtonthemes/seo";
+import { getImage } from "astro:assets";
+import HeroHouse from "@/images/agent/hero-house.webp";
+import { agent, seo, SITE_URL, GOOGLE_SITE_VERIFICATION } from "@/lib/agent";
+
+interface Props {
+  // Keeps a page out of Google. Set for every page except the home page.
+  noindex?: boolean;
+}
+
+const { noindex = false } = Astro.props;
+const { title, description } = seo;
+const isHome = Astro.url.pathname === "/";
+const canonical = new URL(Astro.url.pathname, SITE_URL).href;
+const ogImage = await getImage({ src: HeroHouse, width: 1200, height: 630, format: "jpg" });
+const ogImageUrl = new URL(ogImage.src, SITE_URL).href;
+// Preload the LCP hero candidate for the home page (mobile-first width used by Lighthouse).
+const lcpImage = isHome
+  ? await getImage({ src: HeroHouse, width: 640, format: "webp", quality: 70 })
+  : null;
+---
+
+<AstroSeo
+  title={title}
+  description={description}
+  canonical={canonical}
+  noindex={noindex}
+  nofollow={false}
+  robotsProps={noindex ? undefined : { maxImagePreview: "large", maxSnippet: -1 }}
+  openGraph={{
+    url: canonical,
+    title,
+    description,
+    images: [
+      {
+        url: ogImageUrl,
+        width: 1200,
+        height: 630,
+        alt: `${agent.name}, ${agent.title} in ${agent.address.city}, ${agent.address.region}`,
+        type: "image/jpeg",
+      },
+    ],
+    site_name: `${agent.name}, ${agent.title}`,
+    type: "website",
+    locale: "en_CA",
+  }}
+  twitter={{
+    cardType: "summary_large_image",
+  }}
+/>
+{GOOGLE_SITE_VERIFICATION && <meta name="google-site-verification" content={GOOGLE_SITE_VERIFICATION} />}
+{
+  isHome && (
+    <>
+      <link rel="describedby" href="/llms.txt" />
+      <link rel="alternate" type="text/markdown" title="Markdown version" href="/index.md" />
+      <link rel="preload" as="image" href={lcpImage!.src} type="image/webp" fetchpriority="high" />
+    </>
+  )
+}

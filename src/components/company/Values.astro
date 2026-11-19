@@ -1,0 +1,130 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+const values = [
+  {
+    title: "Integrity",
+    description:
+      "We believe in honest, transparent communication. No hidden fees, no pressure tactics, just straightforward guidance you can trust.",
+  },
+  {
+    title: "Expertise",
+    description:
+      "Our agents average over 10 years of experience and continuously educate themselves on market trends and best practices.",
+  },
+  {
+    title: "Client-first approach",
+    description:
+      "Your goals are our goals. We take time to understand your unique situation and tailor our services to meet your specific needs.",
+  },
+  {
+    title: "Innovation",
+    description:
+      "We leverage the latest technology and marketing strategies to give our clients a competitive advantage in the market.",
+  },
+  {
+    title: "Community focus",
+    description:
+      "We're not just selling properties; we're helping build communities. We invest in and give back to the neighborhoods we serve.",
+  },
+  {
+    title: "Proven results",
+    description:
+      "Our track record speaks for itself: faster sales, fair prices and more than 1,400 homes sold across the Nordics.",
+  },
+];
+
+const stats = [
+  {
+    number: "2009",
+    label: "Founded in Copenhagen",
+  },
+  {
+    number: "1,400+",
+    label: "Homes sold",
+  },
+  {
+    number: "23",
+    label: "Days to sell, on average",
+  },
+  {
+    number: "4",
+    label: "Offices",
+  },
+  {
+    number: "5",
+    label: "Countries served",
+  },
+];
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24">
+    <HeadingWrapper text="Values">
+      <Text
+        tag="h2"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        Our guiding principles
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-8 text-muted-foreground lg:columns-2">
+        These core beliefs shape every aspect of our work, from the moment we
+        first speak until long after the deal is done. They define how we
+        interact with clients, partners, and communities, ensuring that
+        integrity, expertise, and innovation are not just words but lived
+        realities in everything we undertake. Our commitment to these principles
+        drives us to continuously improve and deliver exceptional value in the
+        real estate market.
+      </Text>
+      <div class="grid md:grid-cols-3 gap-y-8 gap-x-4 mt-24">
+        {
+          values.map((value) => (
+            <div>
+              <Text
+                tag="h3"
+                variant="textBase"
+                class="font-medium text-foreground"
+              >
+                {value.title}
+              </Text>
+              <Text tag="p" variant="textSM" class="text-muted-foreground text-pretty">
+                {value.description}
+              </Text>
+            </div>
+          ))
+        }
+      </div>
+    </HeadingWrapper>
+    <dl
+      class="mt-12 pt-12 border-t border-border grid grid-cols-2 lg:grid-cols-5 gap-x-px gap-y-12"
+    >
+      {
+        stats.map((stat) => (
+          <div class="flex flex-col gap">
+            <dt>
+              <Text
+                tag="span"
+                variant="displayXL"
+                class="font-semibold leading-none tracking-tighter text-foreground"
+              >
+                {stat.number}
+              </Text>
+            </dt>
+            <dd>
+              <Text
+                tag="p"
+                variant="textBase"
+                class="mt-2 leading-relaxed text-muted-foreground text-balance"
+              >
+                {stat.label}
+              </Text>
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Wrapper>
+</section>

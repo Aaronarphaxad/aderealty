@@ -1,0 +1,41 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import FancyLink from "@/components/fundations/elements/FancyLink.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+// Components
+import AgentCard from "@/components/agents/AgentCard.astro";
+// Content
+import { getCollection } from "astro:content";
+// Get featured agents
+const allAgents = await getCollection("agents");
+const featuredAgents = allAgents.filter((agent) => agent.data.isFeatured);
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24">
+    <HeadingWrapper text="team">
+      <Text
+        tag="h2"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        Our experienced team
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-8 text-muted-foreground">
+        Our experienced leadership team brings decades of combined expertise in
+        real estate, finance, and customer service. Each member has a proven
+        track record of successful transactions and client satisfaction,
+        bringing deep knowledge of local markets and international trends.
+      </Text>
+      <FancyLink href="/agents" class="mt-12 text-center">
+        Meet all our agents
+      </FancyLink>
+    </HeadingWrapper>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-12 mt-12">
+      {featuredAgents.slice(0, 3).map((agent) => <AgentCard agent={agent} />)}
+    </div>
+  </Wrapper>
+</section>

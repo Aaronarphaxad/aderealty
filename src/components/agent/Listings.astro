@@ -1,0 +1,113 @@
+---
+// Assets
+import { Image } from "astro:assets";
+import VideoTour from "@/images/agent/video-tour.jpg";
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Play from "@/components/fundations/icons/Play.astro";
+import ArrowRight from "@/components/fundations/icons/ArrowRight.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+// Components
+import SectionHeading from "@/components/agent/SectionHeading.astro";
+// Data
+import { agent } from "@/lib/agent";
+
+const video = {
+  id: "TeWpo0yHLGo",
+  title: "Modern Surrey Condo for Sale | 2 Bed + Den | SHYNE Building | 6285 King George Blvd #506",
+};
+const links = [
+  {
+    title: "Featured listings",
+    description: `Homes for sale right now with ${agent.team}.`,
+    href: agent.listingsUrl,
+    tint: "bg-tint-sky",
+  },
+  {
+    title: "Search all homes",
+    description: "Every MLS® listing across Greater Vancouver and the Fraser Valley.",
+    href: agent.searchUrl,
+    tint: "bg-muted",
+  },
+];
+---
+
+<section id="listings" class="scroll-mt-20">
+  <Wrapper variant="standard" class="py-24">
+    <SectionHeading title="Homes for sale in Surrey and the Fraser Valley">
+      Browse current listings from {agent.team} or search every home on the MLS® across
+      Greater Vancouver and the Fraser Valley. See something you like? {agent.shortName} will
+      book the showing.
+    </SectionHeading>
+    <div class="grid grid-cols-1 gap-3 mt-12 xl:grid-cols-12">
+      <figure class="p-3 rounded-2xl bg-muted xl:col-span-8">
+        <div class="relative overflow-hidden rounded-xl aspect-video bg-border" data-video={video.id} data-video-title={video.title}>
+          <button type="button" class="absolute inset-0 flex items-center justify-center w-full group" aria-label={`Play video: ${video.title}`}>
+            <Image
+              src={VideoTour}
+              alt={`Video tour thumbnail with ${agent.name}`}
+              widths={[480, 720, 960]}
+              sizes="(min-width: 1280px) 60vw, 100vw"
+              quality={70}
+              loading="lazy"
+              decoding="async"
+              class="absolute inset-0 object-cover size-full"
+            />
+            <span class="relative flex items-center justify-center transition-colors rounded-full size-16 bg-background text-foreground group-hover:bg-foreground group-hover:text-background">
+              <Play class="size-6" />
+            </span>
+          </button>
+        </div>
+        <figcaption class="flex flex-wrap justify-between gap-2 px-3 pt-4 pb-1">
+          <Text tag="span" variant="textSM" class="font-medium text-foreground">
+            Video tour: 6285 King George Blvd #506, Surrey
+          </Text>
+          <Text tag="span" variant="textSM" class="text-muted-foreground">
+            2 bed + den, SHYNE building
+          </Text>
+        </figcaption>
+      </figure>
+      <ul class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:col-span-4 xl:grid-cols-1" role="list">
+        {
+          links.map((link) => (
+            <li class="flex">
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class={`flex flex-col justify-between gap-8 p-6 rounded-2xl grow group focus:outline-2 focus:outline-muted-foreground ${link.tint}`}
+              >
+                <div>
+                  <Text tag="h3" variant="textLG" class="font-medium text-foreground">
+                    {link.title}
+                  </Text>
+                  <Text tag="p" variant="textSM" class="mt-1 text-foreground/70 text-pretty">
+                    {link.description}
+                  </Text>
+                </div>
+                <span class="flex items-center justify-center transition-colors rounded-full size-9 bg-foreground text-background group-hover:bg-foreground/90">
+                  <ArrowRight size="sm" />
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </Wrapper>
+</section>
+
+<script is:inline>
+  document.querySelectorAll("[data-video]").forEach((frame) => {
+    frame.querySelector("button")?.addEventListener("click", () => {
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube-nocookie.com/embed/${frame.dataset.video}?autoplay=1&rel=0`;
+      iframe.title = frame.dataset.videoTitle;
+      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+      iframe.referrerPolicy = "strict-origin-when-cross-origin";
+      iframe.allowFullscreen = true;
+      iframe.className = "absolute inset-0 size-full";
+      frame.replaceChildren(iframe);
+    });
+  });
+</script>

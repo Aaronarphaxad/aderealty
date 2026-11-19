@@ -1,0 +1,27 @@
+---
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import FancyLink from "@/components/fundations/elements/FancyLink.astro";
+import OpenHouseCard from "@/components/openhouses/OpenHouseCard.astro";
+const { neighborhoodOpenHouses } = Astro.props;
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24">
+    <div class="flex flex-wrap lg:items-end lg:justify-between">
+      <Text
+        tag="h2"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance   uppercase lg:w-1/2"
+      >
+        More open houses
+      </Text>
+      <FancyLink href="/open-houses"> Browse all open houses </FancyLink>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-12 mt-12">
+      {neighborhoodOpenHouses.slice(0, 3).map((openHouse) => (
+        <OpenHouseCard openHouse={openHouse} />
+      ))}
+    </div>
+  </Wrapper>
+</section>

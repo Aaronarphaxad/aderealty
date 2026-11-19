@@ -1,0 +1,42 @@
+---
+// Fundations
+import BaseLayout from "@/layouts/BaseLayout.astro";
+// Content
+import { getCollection } from "astro:content";
+import { isActive } from "@/lib/properties";
+import AgentListings from "@/components/agents/AgentListings.astro";
+import AgentProfile from "@/components/agents/AgentProfile.astro";
+const { frontmatter } = Astro.props;
+// Get agent's slug from the current URL
+const agentSlug = Astro.url.pathname.split("/").filter(Boolean).pop();
+// Get all properties and filter by this agent
+const allProperties = await getCollection("properties");
+const agentProperties = allProperties.filter(
+  (property) => property.data.agent === agentSlug
+);
+const activeListings = agentProperties.filter(isActive);
+const soldListings = agentProperties.filter((property) => property.data.status === "sold");
+const firstName = frontmatter.name.split(" ")[0];
+const facts = [
+  { label: "City", value: frontmatter.city },
+  { label: "Languages", value: frontmatter.languages.join(", ") },
+  { label: "Active listings", value: activeListings.length },
+  { label: "Sold", value: soldListings.length },
+];
+const listingGroups = [
+  { title: `${firstName}'s listings`, properties: activeListings },
+  { title: `Sold by ${firstName}`, properties: soldListings },
+].filter((group) => group.properties.length > 0);
+---
+
+<BaseLayout>
+  <AgentProfile frontmatter={frontmatter} facts={facts} firstName={firstName}>
+    <slot />
+  </AgentProfile>
+
+  {
+    listingGroups.map((group) => (
+      <AgentListings title={group.title} properties={group.properties} />
+    ))
+  }
+</BaseLayout>

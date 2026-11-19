@@ -1,0 +1,55 @@
+---
+interface Props {
+  href?: string;
+  class?: string;
+  textClass?: string;
+  textSizeClass?: string;
+  ballColorClass?: string;
+  target?: string;
+  rel?: string;
+  ariaLabel?: string;
+  variant?: "light" | "dark";
+}
+const {
+  href = "/",
+  class: className = "",
+  textClass,
+  textSizeClass = "text-base",
+  ballColorClass,
+  target,
+  rel,
+  ariaLabel,
+  variant = "light",
+} = Astro.props;
+
+// Set default text and ball colors based on variant, allow override
+const defaultTextClass = variant === "dark" ? "text-background" : "text-foreground";
+const defaultBallColorClass = variant === "dark" ? "bg-background" : "bg-foreground";
+const finalTextClass = textClass ?? defaultTextClass;
+const finalBallColorClass = ballColorClass ?? defaultBallColorClass;
+const computedRel =
+  rel ?? (target === "_blank" ? "noopener noreferrer" : undefined);
+---
+
+<a
+  href={href}
+  class={`font-medium group w-fit flex items-center gap-4  ${textSizeClass} ${finalTextClass} ${className}`.trim()}
+  target={target}
+  rel={computedRel}
+  aria-label={ariaLabel}
+>
+  <slot />
+  <span class="flex items-center gap-0.5">
+    <span
+      aria-hidden="true"
+      class={`${finalBallColorClass} size-2 rounded-full`}></span>
+    <span
+      aria-hidden="true"
+      class={`${finalBallColorClass} translate-x-0 transition-transform duration-300 ease-out group-hover:-translate-x-2.5 size-2 rounded-full`}
+    ></span>
+    <span
+      aria-hidden="true"
+      class={`${finalBallColorClass} translate-x-0 transition-transform duration-300 ease-out group-hover:-translate-x-5 size-2 rounded-full`}
+    ></span>
+  </span>
+</a>

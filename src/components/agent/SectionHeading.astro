@@ -1,0 +1,30 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+
+interface Props {
+  title: string;
+  class?: string;
+  // Set when the heading sits on a tinted card, where the grey lead text is too faint
+  onTint?: boolean;
+}
+
+const { title, class: className = "", onTint = false } = Astro.props;
+---
+
+<div class={`max-w-3xl ${className}`.trim()}>
+  <Text
+    tag="h2"
+    variant="displayLG"
+    class="font-semibold leading-none tracking-tight text-foreground text-balance"
+  >
+    {title}
+  </Text>
+  {
+    Astro.slots.has("default") && (
+      <Text tag="p" variant="textLG" class={`mt-4 text-pretty ${onTint ? "text-foreground/70" : "text-muted-foreground"}`}>
+        <slot />
+      </Text>
+    )
+  }
+</div>

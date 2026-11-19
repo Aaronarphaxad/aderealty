@@ -1,0 +1,27 @@
+---
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import FancyLink from "@/components/fundations/elements/FancyLink.astro";
+import BlogCard from "@/components/blog/BlogCard.astro";
+const { relatedPosts } = Astro.props;
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24">
+    <div class="flex flex-wrap lg:items-end lg:justify-between">
+      <Text
+        tag="h2"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance   uppercase lg:w-1/2"
+      >
+        Related posts
+      </Text>
+      <FancyLink href="/blog"> Browse all posts </FancyLink>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-12 mt-12">
+      {relatedPosts.slice(0, 3).map((post) => (
+        <BlogCard post={post} />
+      ))}
+    </div>
+  </Wrapper>
+</section>

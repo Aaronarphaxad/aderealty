@@ -1,0 +1,155 @@
+---
+// Assets
+import { Image } from "astro:assets";
+import Portrait from "@/images/agent/portrait.jpg";
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import Home from "@/components/fundations/icons/Home.astro";
+// Components
+import SectionHeading from "@/components/agent/SectionHeading.astro";
+// Data
+import { agent, teamRecord } from "@/lib/agent";
+
+const { yearToDate, lastYear, familiesHelped, awards, yearsAtNumberOne, presidentsClubYears } = teamRecord;
+
+// Derived from the two published full-year figures, rounded to the nearest $10K
+const averageSale = `$${Math.round((lastYear.salesVolumeMillions / lastYear.homesSold) * 100) * 10}K`;
+const homeFacts = [
+  { label: `All of ${lastYear.year}`, value: `${lastYear.homesSold} homes` },
+  { label: "Families helped to date", value: familiesHelped },
+];
+const volumeFacts = [
+  { label: "Homes sold per week", value: String(lastYear.homesPerWeek) },
+  { label: "Average sale", value: `about ${averageSale}` },
+];
+
+const cardClass = "flex flex-col justify-between gap-8 p-6 rounded-2xl";
+const numberClass = "block font-semibold leading-none tracking-tighter text-foreground";
+const labelClass = "max-w-xs mt-2 text-foreground text-pretty";
+const tableClass = "p-4 rounded-xl bg-background";
+const rowClass = "flex items-baseline justify-between gap-4 py-2 border-t border-border first:border-0 first:pt-0 last:pb-0";
+---
+
+<section id="results" class="scroll-mt-20">
+  <Wrapper variant="standard" class="py-24">
+    <SectionHeading title="A strategist's approach, backed by the Fraser Valley's top team.">
+      {agent.shortName} works with {agent.team}, brokered by {agent.brokerage}. You get one
+      advisor who knows your file inside out, with the marketing, systems and negotiators of
+      the region's leading team behind every decision.
+    </SectionHeading>
+    <ul class="grid grid-cols-1 gap-3 mt-12 md:grid-cols-2 xl:grid-cols-12" role="list">
+      <li class="flex flex-col gap-8 p-6 rounded-2xl bg-tint-sky sm:flex-row sm:items-end sm:justify-between md:col-span-2 xl:col-span-7">
+        <Home class="size-24 shrink-0 text-foreground sm:order-2 sm:size-40" aria-hidden="true" />
+        <div class="flex flex-col justify-between gap-8 grow sm:self-stretch sm:max-w-sm">
+          <div>
+            <Text tag="span" variant="displayXL" class={numberClass}>{yearToDate.homesSold}</Text>
+            <Text tag="p" variant="textSM" class={labelClass}>
+              {`homes sold by the team in ${yearToDate.year}, as of ${yearToDate.asOf}.`}
+            </Text>
+          </div>
+          <dl class={tableClass}>
+            {
+              homeFacts.map((fact) => (
+                <div class={rowClass}>
+                  <dt class="text-xs text-muted-foreground">{fact.label}</dt>
+                  <dd class="text-sm font-medium text-foreground">{fact.value}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </li>
+      <li class={`${cardClass} bg-tint-sage xl:col-span-5`}>
+        <div>
+          <Text tag="span" variant="displayXL" class={numberClass}>#1</Text>
+          <Text tag="p" variant="textSM" class={labelClass}>
+            {`in every team category at the ${awards.year} Fraser Valley Real Estate Board awards.`}
+          </Text>
+        </div>
+        <ul class={tableClass} role="list">
+          {
+            awards.titles.map((title) => (
+              <li class={`${rowClass} items-center`}>
+                <span class="text-xs font-medium text-foreground">{title}</span>
+                <span class="flex items-center h-5 px-2 text-xs font-medium rounded-full bg-foreground text-background">#1</span>
+              </li>
+            ))
+          }
+        </ul>
+      </li>
+      <li class={`${cardClass} bg-tint-sand xl:col-span-5`}>
+        <div>
+          <Text tag="span" variant="displayXL" class={numberClass}>{`$${lastYear.salesVolumeMillions}M`}</Text>
+          <Text tag="p" variant="textSM" class={labelClass}>
+            {`in team sales in ${lastYear.year}, the last full year.`}
+          </Text>
+        </div>
+        <dl class={tableClass}>
+          {
+            volumeFacts.map((fact) => (
+              <div class={rowClass}>
+                <dt class="text-xs text-muted-foreground">{fact.label}</dt>
+                <dd class="text-sm font-medium text-foreground">{fact.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </li>
+      <li class={`${cardClass} bg-tint-clay xl:col-span-4`}>
+        <div>
+          <Text tag="span" variant="displayXL" class={numberClass}>{yearsAtNumberOne}</Text>
+          <Text tag="p" variant="textSM" class={labelClass}>
+            years in a row as the Fraser Valley's overall #1 team, with a President's Club award
+            each year.
+          </Text>
+        </div>
+        <ul class="flex flex-wrap gap-2" role="list">
+          {
+            presidentsClubYears.map((clubYear, index) => (
+              <li
+                class:list={[
+                  "flex items-center h-7 px-3 text-xs font-medium rounded-full",
+                  // Latest year uses the sky tint so it stays distinct without failing contrast checks
+                  index === presidentsClubYears.length - 1
+                    ? "bg-tint-sky text-foreground"
+                    : "bg-foreground text-background",
+                ]}
+              >
+                {clubYear}
+              </li>
+            ))
+          }
+        </ul>
+      </li>
+      <li class={`${cardClass} bg-muted xl:col-span-3`}>
+        <div>
+          <Text tag="span" variant="displayXL" class={numberClass}>1</Text>
+          <Text tag="p" variant="textSM" class={labelClass}>
+            advisor on your file, from the first call to the keys.
+          </Text>
+        </div>
+        <div class="flex items-center gap-3">
+          <Image
+            src={Portrait}
+            alt=""
+            width={40}
+            height={40}
+            densities={[1, 2]}
+            loading="lazy"
+            decoding="async"
+            aria-hidden="true"
+            class="object-cover object-top rounded-full size-10 shrink-0"
+          />
+          <div>
+            <p class="text-sm font-medium text-foreground">{agent.name}</p>
+            <p class="text-xs text-muted-foreground">{`${agent.title}, MBA`}</p>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <Text tag="p" variant="textXS" class="mt-4 text-muted-foreground">
+      {`Team figures are for ${agent.team}. Past results are not a promise. Every home and every market is different.`}
+    </Text>
+  </Wrapper>
+</section>

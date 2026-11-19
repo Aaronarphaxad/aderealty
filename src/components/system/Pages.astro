@@ -1,0 +1,153 @@
+---
+// Fundations
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+import Text from "@/components/fundations/elements/Text.astro";
+
+const groups = [
+  {
+    title: "Static",
+    columns: [
+      {
+        category: "Pages",
+        links: [
+          { text: "Home", href: "/" },
+          { text: "Company", href: "/company" },
+          { text: "Valuation", href: "/valuation" },
+          { text: "Sell your property", href: "/sell-your-property" },
+          { text: "404", href: "/404" },
+        ],
+      },
+      {
+        category: "Forms",
+        links: [{ text: "Book a call", href: "/book-a-call" }],
+      },
+      {
+        category: "System",
+        links: [
+          { text: "Colors", href: "/system/colors" },
+          { text: "Typography", href: "/system/typography" },
+          { text: "Buttons", href: "/system/buttons" },
+          { text: "Links", href: "/system/link" },
+        ],
+      },
+      {
+        category: "Resources",
+        links: [
+          { text: "Documentation", href: "https://lexingtonthemes.com/documentation/" },
+          { text: "License", href: "https://lexingtonthemes.com/legal/license" },
+        ],
+      },
+    ],
+  },
+  {
+    title: "Content collections",
+    columns: [
+      {
+        category: "Properties",
+        links: [
+          { text: "Index", href: "/properties" },
+          { text: "Detail", href: "/properties/for-sale/copenhagen-villa" },
+        ],
+      },
+      {
+        category: "Agents",
+        links: [
+          { text: "Index", href: "/agents" },
+          { text: "Detail", href: "/agents/lars-nielsen" },
+        ],
+      },
+      {
+        category: "Services",
+        links: [
+          { text: "Index", href: "/services" },
+          { text: "Detail", href: "/services/buyer-representation" },
+        ],
+      },
+      {
+        category: "Neighborhoods",
+        links: [
+          { text: "Index", href: "/neighborhoods" },
+          { text: "Detail", href: "/neighborhoods/gamla-stan" },
+        ],
+      },
+      {
+        category: "Open houses",
+        links: [
+          { text: "Index", href: "/open-houses" },
+          { text: "Detail", href: "/open-houses/oslo-penthouse-open-house" },
+        ],
+      },
+      {
+        category: "Stories",
+        links: [
+          { text: "Index", href: "/stories" },
+          { text: "Detail", href: "/stories/iker-salaberri" },
+        ],
+      },
+      {
+        category: "Careers",
+        links: [
+          { text: "Index", href: "/careers" },
+          { text: "Detail", href: "/careers/junior-real-estate-agent" },
+        ],
+      },
+      {
+        category: "Resources",
+        links: [
+          { text: "Index", href: "/resources" },
+          { text: "Detail", href: "/resources/buying-guide" },
+        ],
+      },
+      {
+        category: "Blog",
+        links: [
+          { text: "Index", href: "/blog" },
+          { text: "Detail", href: "/blog/posts/1" },
+          { text: "RSS", href: "/rss.xml" },
+        ],
+      },
+      {
+        category: "Legal",
+        links: [{ text: "Detail", href: "/legal/privacy-policy" }],
+      },
+    ],
+  },
+];
+---
+
+{
+  groups.map((group) => (
+    <section>
+      <Wrapper variant="standard" class="pb-24">
+        <div class="pt-12 border-t border-border">
+          <HeadingWrapper text={group.title}>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12">
+              {group.columns.map((column) => (
+                <div class="pt-2 border-t border-border">
+                  <Text tag="h2" variant="textBase" class="font-medium text-foreground">
+                    {column.category}
+                  </Text>
+                  <ul class="flex flex-col gap-1 mt-4">
+                    {column.links.map((link) => (
+                      <li>
+                        <Text
+                          tag="a"
+                          variant="textSM"
+                          href={link.href}
+                          class="duration-300 text-muted-foreground hover:text-foreground"
+                        >
+                          {link.text}
+                        </Text>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </HeadingWrapper>
+        </div>
+      </Wrapper>
+    </section>
+  ))
+}

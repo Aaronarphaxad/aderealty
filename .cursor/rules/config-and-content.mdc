@@ -1,0 +1,10 @@
+---
+description: Coordinate Astro site config, integrations, and content collection definitions — edit only when necessary and keep them consistent.
+globs: astro.config.*,src/content.config.ts
+---
+
+# Astro config ↔ content config
+
+- **`astro.config.mjs`:** Sets `site`, Vite plugin **`@tailwindcss/vite`**, and the `@astrojs/sitemap` integration. Do not add integrations or npm features not reflected in `package.json`.
+- **`src/content.config.ts`:** Adding/removing collections or changing Zod shapes requires coordinated updates to `src/pages/**` (every `getCollection("…")` consumer) and any layouts reading `frontmatter` / `entry.data`.
+- **Site URL:** Changing `site` affects sitemap, RSS `context.site`, and canonical assumptions — update the placeholder SEO in `src/components/fundations/head/BaseHead.astro` when you productionize.

@@ -1,0 +1,27 @@
+---
+import Text from "@/components/fundations/elements/Text.astro";
+import FancyLink from "@/components/fundations/elements/FancyLink.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import ProperySmallCard from "@/components/properties/ProperySmallCard.astro";
+const { title, properties } = Astro.props;
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24">
+    <div class="flex flex-wrap gap-8 lg:items-end lg:justify-between">
+      <Text
+        tag="h2"
+        variant="displayLG"
+        class="font-semibold leading-none uppercase text-foreground tracking-tight text-balance lg:w-1/2"
+      >
+        {title}
+      </Text>
+      <FancyLink href="/properties">Browse listings</FancyLink>
+    </div>
+    <div class="grid grid-cols-1 mt-12 lg:grid-cols-3 gap-x-8 gap-y-12">
+      {properties.map((property) => (
+        <ProperySmallCard property={property} />
+      ))}
+    </div>
+  </Wrapper>
+</section>

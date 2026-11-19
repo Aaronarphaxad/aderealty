@@ -1,0 +1,186 @@
+---
+import Logo from "@/components/assets/Logo.astro";
+// Fundations
+import Button from "@/components/fundations/elements/Button.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+// Components
+import Toggle from "@/components/global/Toggle.astro";
+// Data
+import { agent, navLinks, secondaryLinks } from "@/lib/agent";
+
+const mainLinks = navLinks.map((l) => ({ ...l, href: `/${l.href}` }));
+const mobileSecondary = secondaryLinks.map((l) => ({ ...l, href: `/${l.href}` }));
+const { transparent = false } = Astro.props as { transparent?: boolean };
+---
+
+<nav
+  class="fixed w-full top-0 z-50 bg-background transition-colors duration-300 data-transparent:bg-transparent"
+  data-transparent={transparent ? "" : undefined}
+  data-transparent-nav={transparent ? "" : undefined}
+>
+  <Wrapper variant="standard" class="relative">
+    <div class="flex items-center justify-between py-3">
+      <a href="/" class="focus:outline-none">
+        <Logo />
+      </a>
+      <ul class="absolute hidden -translate-x-1/2 lg:flex left-1/2 items-center gap-1" role="list">
+        {
+          mainLinks.map((l) => (
+            <li>
+              <a
+                href={l.href}
+                class="block px-3 py-1.5 text-sm border border-transparent rounded-full transition-colors text-foreground hover:border-accent focus:border-accent focus:outline-none"
+              >
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="items-center hidden lg:flex gap-6">
+        <a
+          href={agent.cell.href}
+          class="hidden text-sm transition-colors xl:block text-muted-foreground hover:text-foreground"
+        >
+          {agent.cell.label}
+        </a>
+        <Button isLink={true} href={agent.bookingUrl} target="_blank" rel="noopener noreferrer" variant="default" size="sm" class="w-fit">
+          Book a discovery call
+        </Button>
+      </div>
+      <button
+        class="relative flex lg:hidden duration-500 text-foreground group"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+        data-menu-button
+      >
+        <Toggle label="Toggle navigation" />
+      </button>
+    </div>
+    <div
+      id="mobile-menu"
+      class="absolute inset-x-0 overflow-hidden opacity-0 pointer-events-none lg:hidden top-full transition-all duration-300 ease-out max-h-0 -translate-y-2 border-b border-border"
+    >
+      <div class="flex flex-col p-8 bg-background">
+        <ul class="flex flex-col gap-3" role="list">
+          {
+            mainLinks.map((link) => (
+              <li>
+                <a href={link.href} data-menu-link class="text-base font-medium text-foreground">
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <ul class="flex flex-col gap-3 pt-4 mt-4 border-t border-border" role="list">
+          {
+            mobileSecondary.map((link) => (
+              <li>
+                <a href={link.href} data-menu-link class="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <div class="flex flex-col gap-2 mt-12">
+          <Button isLink={true} href={agent.bookingUrl} target="_blank" rel="noopener noreferrer" variant="default" size="sm" class="w-full" data-menu-link>
+            Book a discovery call
+          </Button>
+          <Button isLink={true} href={agent.listingsUrl} target="_blank" rel="noopener noreferrer" variant="muted" size="sm" class="w-full">
+            View listings
+          </Button>
+        </div>
+        <div class="flex flex-col gap-2 pt-4 mt-4 border-t border-border">
+          <a href={agent.email.href} class="text-xs transition-colors text-muted-foreground hover:text-foreground">
+            {agent.email.label}
+          </a>
+          <a href={agent.cell.href} class="text-xs transition-colors text-muted-foreground hover:text-foreground">
+            {agent.cell.label}
+          </a>
+        </div>
+      </div>
+    </div>
+  </Wrapper>
+  <script is:inline>
+    (() => {
+      const nav = document.querySelector("[data-transparent-nav]");
+      if (!nav) return;
+      const update = () => nav.toggleAttribute("data-transparent", window.scrollY < 8);
+      update();
+      window.addEventListener("scroll", update, { passive: true });
+    })();
+    window.addEventListener("DOMContentLoaded", () => {
+      // Mobile menu toggle logic
+      const menuButton = document.querySelector("[data-menu-button]");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const setButtonState = (open) => {
+        if (!menuButton) return;
+        menuButton.setAttribute("aria-expanded", String(open));
+        if (open) {
+          menuButton.setAttribute("data-open", "true");
+        } else {
+          menuButton.removeAttribute("data-open");
+        }
+      };
+      const openMenu = () => {
+        if (!menuButton || !mobileMenu) return;
+        setButtonState(true);
+        mobileMenu.classList.remove(
+          "max-h-0",
+          "opacity-0",
+          "-translate-y-2",
+          "pointer-events-none"
+        );
+        mobileMenu.classList.add(
+          "max-h-screen",
+          "opacity-100",
+          "translate-y-0",
+          "pointer-events-auto"
+        );
+      };
+      const closeMenu = () => {
+        if (!menuButton || !mobileMenu) return;
+        setButtonState(false);
+        mobileMenu.classList.add(
+          "max-h-0",
+          "opacity-0",
+          "-translate-y-2",
+          "pointer-events-none"
+        );
+        mobileMenu.classList.remove(
+          "max-h-screen",
+          "opacity-100",
+          "translate-y-0",
+          "pointer-events-auto"
+        );
+      };
+      const toggleMenu = () => {
+        const expanded = menuButton.getAttribute("aria-expanded") === "true";
+        expanded ? closeMenu() : openMenu();
+      };
+      if (menuButton) menuButton.addEventListener("click", toggleMenu);
+      document.querySelectorAll("[data-menu-link]").forEach((link) => {
+        link.addEventListener("click", closeMenu);
+      });
+      // Click outside to close
+      document.addEventListener("click", (e) => {
+        const target = e.target;
+        if (!mobileMenu.contains(target) && !menuButton.contains(target)) {
+          const expanded = menuButton.getAttribute("aria-expanded") === "true";
+          if (expanded) closeMenu();
+        }
+      });
+      // Escape to close
+      document.addEventListener("keydown", (e) => {
+        if (
+          e.key === "Escape" &&
+          menuButton.getAttribute("aria-expanded") === "true"
+        ) {
+          closeMenu();
+        }
+      });
+    });
+  </script>
+</nav>

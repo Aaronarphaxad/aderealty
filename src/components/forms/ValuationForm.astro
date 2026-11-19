@@ -1,0 +1,264 @@
+---
+import Button from "@/components/fundations/elements/Button.astro";
+---
+
+<form class="space-y-6">
+  <!-- Contact Information -->
+  <div class="grid sm:grid-cols-2 gap-6">
+    <div class="space-y-1">
+      <label for="firstName" class="block text-sm text-foreground">
+        First Name *
+      </label>
+      <input
+        type="text"
+        id="firstName"
+        name="firstName"
+        required
+        class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+        placeholder="Henrik"
+      />
+    </div>
+    <div class="space-y-1">
+      <label for="lastName" class="block text-sm text-foreground">
+        Last Name *
+      </label>
+      <input
+        type="text"
+        id="lastName"
+        name="lastName"
+        required
+        class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+        placeholder="Vallin"
+      />
+    </div>
+  </div>
+
+  <div class="grid sm:grid-cols-2 gap-6">
+    <div class="space-y-1">
+      <label for="email" class="block text-sm text-foreground">
+        Email Address *
+      </label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        required
+        class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+        placeholder="henrik@vallin.test"
+      />
+    </div>
+    <div class="space-y-1">
+      <label for="phone" class="block text-sm text-foreground">
+        Phone Number *
+      </label>
+      <input
+        type="tel"
+        id="phone"
+        name="phone"
+        required
+        class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+        placeholder="+45 00 00 00 00"
+      />
+    </div>
+  </div>
+
+  <!-- Property Address -->
+  <div class="space-y-1">
+    <label for="address" class="block text-sm text-foreground">
+      Property Address *
+    </label>
+    <input
+      type="text"
+      id="address"
+      name="address"
+      required
+      class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+      placeholder="Street address"
+    />
+  </div>
+
+  <div class="grid sm:grid-cols-3 gap-6">
+    <div class="space-y-1">
+      <label for="city" class="block text-sm text-foreground"> City * </label>
+      <input
+        type="text"
+        id="city"
+        name="city"
+        required
+        class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+        placeholder="Copenhagen"
+      />
+    </div>
+    <div class="space-y-1">
+      <label for="postalCode" class="block text-sm text-foreground">
+        Postal Code *
+      </label>
+      <input
+        type="text"
+        id="postalCode"
+        name="postalCode"
+        required
+        class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+        placeholder="1620"
+      />
+    </div>
+    <div class="space-y-1">
+      <label for="country" class="block text-sm text-foreground">
+        Country *
+      </label>
+      <select
+        id="country"
+        name="country"
+        required
+        class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+      >
+        <option value="">Select</option>
+        <option value="denmark">Denmark</option>
+        <option value="sweden">Sweden</option>
+        <option value="norway">Norway</option>
+        <option value="finland">Finland</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Property Details -->
+  <div class="grid sm:grid-cols-3 gap-6">
+    <div class="space-y-1">
+      <label for="propertyType" class="block text-sm text-foreground">
+        Property Type *
+      </label>
+      <select
+        id="propertyType"
+        name="propertyType"
+        required
+        class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+      >
+        <option value="">Select type</option>
+        <option value="house">House</option>
+        <option value="apartment">Apartment</option>
+        <option value="townhouse">Townhouse</option>
+        <option value="villa">Villa</option>
+        <option value="land">Land</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div class="space-y-1">
+      <label for="bedrooms" class="block text-sm text-foreground">
+        Bedrooms *
+      </label>
+      <input
+        type="number"
+        id="bedrooms"
+        name="bedrooms"
+        required
+        min="0"
+        class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+        placeholder="3"
+      />
+    </div>
+    <div class="space-y-1">
+      <label for="bathrooms" class="block text-sm text-foreground">
+        Bathrooms *
+      </label>
+      <input
+        type="number"
+        id="bathrooms"
+        name="bathrooms"
+        required
+        min="0"
+        step="0.5"
+        class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+        placeholder="2"
+      />
+    </div>
+  </div>
+
+  <div class="grid sm:grid-cols-2 gap-6">
+    <div class="space-y-1">
+      <label for="squareMeters" class="block text-sm text-foreground">
+        Living Area (sqm) *
+      </label>
+      <input
+        type="number"
+        id="squareMeters"
+        name="squareMeters"
+        required
+        min="0"
+        class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+        placeholder="120"
+      />
+    </div>
+    <div class="space-y-1">
+      <label for="yearBuilt" class="block text-sm text-foreground">
+        Year built
+      </label>
+      <input
+        type="number"
+        id="yearBuilt"
+        name="yearBuilt"
+        min="1800"
+        max="2025"
+        class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+        placeholder="1990"
+      />
+    </div>
+  </div>
+
+  <!-- Property Condition -->
+  <div class="space-y-1">
+    <label for="condition" class="block text-sm text-foreground">
+      Property Condition *
+    </label>
+    <select
+      id="condition"
+      name="condition"
+      required
+      class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+    >
+      <option value="">Select condition</option>
+      <option value="excellent">Excellent - Recently renovated</option>
+      <option value="good">Good - Well maintained</option>
+      <option value="fair">Fair - Some updates needed</option>
+      <option value="needs-work">Needs Work - Renovation required</option>
+    </select>
+  </div>
+
+  <!-- Selling Timeline -->
+  <div class="space-y-1">
+    <label for="timeline" class="block text-sm text-foreground">
+      When are you planning to sell? *
+    </label>
+    <select
+      id="timeline"
+      name="timeline"
+      required
+      class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+    >
+      <option value="">Select timeline</option>
+      <option value="asap">As soon as possible</option>
+      <option value="1-3-months">Within 1-3 months</option>
+      <option value="3-6-months">Within 3-6 months</option>
+      <option value="6-12-months">Within 6-12 months</option>
+      <option value="just-curious">Just curious about value</option>
+    </select>
+  </div>
+
+  <!-- Additional Information -->
+  <div class="space-y-1">
+    <label for="additionalInfo" class="block text-sm text-foreground">
+      Additional information
+    </label>
+    <textarea
+      id="additionalInfo"
+      name="additionalInfo"
+      rows="4"
+      class="w-full px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 resize-none"
+      placeholder="Any special features, recent renovations, or other details that might affect value..."
+    ></textarea>
+  </div>
+
+  <!-- Submit Button -->
+  <Button variant="muted" size="xs" type="submit" class="w-fit mt-12">
+    Get my free valuation
+  </Button>
+</form>

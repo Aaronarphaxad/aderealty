@@ -1,0 +1,91 @@
+---
+// Assets
+import { Image } from "astro:assets";
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Button from "@/components/fundations/elements/Button.astro";
+import FancyLink from "@/components/fundations/elements/FancyLink.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+// Content
+import { getCollection } from "astro:content";
+import { formatViewingDate, priceText, propertyUrl } from "@/lib/properties";
+const properties = await getCollection("properties");
+const upcoming = (await getCollection("openHouses"))
+  .filter((house) => new Date(house.data.date) >= new Date())
+  .sort((a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime())
+  .map((house) => ({ house, property: properties.find((p) => p.id === house.data.property) }))
+  .filter((entry) => entry.property);
+const [next, ...later] = upcoming;
+---
+
+{
+  next && next.property && (
+    <section>
+      <Wrapper variant="standard" class="py-24">
+        <div class="flex flex-wrap gap-8 lg:items-end lg:justify-between">
+          <Text
+            tag="h2"
+            variant="displayLG"
+            class="font-semibold leading-none uppercase text-foreground tracking-tight text-balance"
+          >
+            Next open house
+          </Text>
+          <FancyLink href="/open-houses">All open houses</FancyLink>
+        </div>
+        <div class="grid grid-cols-1 gap-8 mt-12 lg:grid-cols-12">
+          <div class="overflow-hidden rounded-lg lg:col-span-7">
+            <Image
+              src={next.property.data.coverImage.url}
+              alt={next.property.data.coverImage.alt}
+              width={1200}
+              height={800}
+              class="object-cover w-full aspect-3/2"
+            />
+          </div>
+          <div class="flex flex-col justify-between gap-12 lg:col-span-5">
+            <div>
+              <Text tag="p" variant="textSM" class="font-medium text-accent">
+                {formatViewingDate(next.house.data.date)}, {next.house.data.startTime} to {next.house.data.endTime}
+              </Text>
+              <Text tag="h3" variant="displayXS" class="mt-4 font-semibold tracking-tight text-foreground text-balance">
+                {next.property.data.title}
+              </Text>
+              <Text tag="p" variant="textBase" class="mt-2 text-muted-foreground">
+                {next.property.data.city}, {priceText(next.property)}
+              </Text>
+              {next.house.data.note && (
+                <Text tag="p" variant="textSM" class="mt-6 text-muted-foreground text-pretty">
+                  {next.house.data.note}
+                </Text>
+              )}
+              <div class="flex flex-wrap gap-2 mt-8">
+                <Button isLink size="sm" variant="default" href={`/open-houses/${next.house.id}`}>
+                  Plan your visit
+                </Button>
+                <Button isLink size="sm" variant="muted" href={propertyUrl(next.property)}>
+                  See the home
+                </Button>
+              </div>
+            </div>
+            {later.length > 0 && (
+              <div>
+                <Text tag="h4" variant="textSM" class="font-medium text-foreground">
+                  After that
+                </Text>
+                <ul class="mt-2" role="list">
+                  {later.slice(0, 3).map(({ house, property }) => (
+                    <li class="relative flex justify-between gap-4 py-3 text-sm border-t group border-border">
+                      <a href={`/open-houses/${house.id}`} class="absolute inset-0" aria-label={house.data.title} />
+                      <span class="transition-colors text-foreground group-hover:text-accent">{property?.data.city}</span>
+                      <span class="text-muted-foreground">{formatViewingDate(house.data.date)}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+      </Wrapper>
+    </section>
+  )
+}

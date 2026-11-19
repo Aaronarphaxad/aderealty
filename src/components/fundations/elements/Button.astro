@@ -1,0 +1,154 @@
+---
+const {
+  variant,
+  size,
+  onlyIconSize,
+  iconOnly = false,
+  gap,
+  isLink = false,
+  class: className,
+  ...rest
+} = Astro.props;
+const defaultClass = [
+  "text-background",
+  "bg-foreground",
+  "hover:bg-foreground/90",
+  "focus:outline-muted-foreground",
+];
+const accentClass = [
+  "text-background",
+  "bg-accent",
+  "hover:bg-accent/90",
+  "focus:outline-accent",
+];
+const mutedClass = [
+  "text-foreground",
+  "bg-muted",
+  "hover:bg-border",
+  "focus:outline-muted-foreground",
+];
+
+const mutedDarkClass = [
+  "text-background",
+  "bg-foreground/90",
+  "hover:bg-foreground/80",
+  "focus:outline-muted-foreground",
+];
+
+const invertedClass = [
+  "text-foreground",
+  "bg-background",
+  "hover:bg-muted",
+  "focus:outline-background",
+];
+
+const outlineClass = [
+  "text-foreground",
+  "bg-transparent",
+  "border",
+  "border-foreground",
+  "hover:bg-foreground",
+  "hover:text-background",
+  "focus:outline-muted-foreground",
+];
+
+// Size
+const sizes = {
+  xxs: ["h-7.5", "px-4", "py-2", "text-xs"],
+  xs: ["h-8", "px-4", "py-3", "text-xs"],
+  sm: ["h-9", "px-4", "py-3", "text-sm"],
+  base: ["h-10", "px-5", "py-4", "text-base"],
+  md: ["h-11", "px-5", "py-4", "text-md"],
+  lg: ["h-12", "px-6", "py-4", "text-lg"],
+  xl: ["h-13", "px-6", "py-4", "text-lg"],
+};
+// Icon size
+const iconSizes = {
+  xxs: ["size-7.5", "py-2", "text-xs"],
+  xs: ["size-8", "text-xs"],
+  sm: ["size-9", "text-sm"],
+  base: ["size-10", "text-base"],
+  md: ["size-11", "text-md"],
+  lg: ["size-12", "text-lg"],
+  xl: ["size-13", "text-base"],
+};
+// Gaps
+const gapMap = {
+  xs: ["gap-2"],
+  sm: ["gap-4"],
+  base: ["gap-8"],
+  md: ["gap-10"],
+  lg: ["gap-12"],
+};
+const variantClass = {
+  default: defaultClass,
+  accent: accentClass,
+  muted: mutedClass,
+  mutedDark: mutedDarkClass,
+  inverted: invertedClass,
+  outline: outlineClass,
+  none: [],
+};
+const sizeClass = iconOnly ? iconSizes[size] : sizes[size] || [];
+const gapClass = !iconOnly && gap ? gapMap[gap] : [];
+const additionalClasses = className ? className.split(" ") : [];
+const baseClass = [
+  "flex",
+  "ease-in-out",
+  "text-center",
+  "rounded-full",
+  "font-medium",
+  "items-center",
+  "duration-500",
+  "justify-center",
+  "transition-colors",
+  "focus:outline-2",
+];
+---
+
+{
+  isLink ? (
+    <a
+      href={rest.href}
+      class:list={[
+        ...baseClass,
+        ...(variantClass[variant] || []),
+        ...sizeClass,
+        ...gapClass,
+        ...additionalClasses,
+      ]}
+      {...rest}
+    >
+      {iconOnly ? (
+        <slot name="icon" />
+      ) : (
+        <>
+          <slot name="left-icon" />
+          <slot />
+          <slot name="right-icon" />
+        </>
+      )}
+    </a>
+  ) : (
+    <button
+      class:list={[
+        ...baseClass,
+        ...(variantClass[variant] || []),
+        ...sizeClass,
+        ...gapClass,
+        ...additionalClasses,
+      ]}
+      {...rest}
+    >
+      {iconOnly ? (
+        <slot name="icon" />
+      ) : (
+        <>
+          <slot name="left-icon" />
+          <slot />
+          <slot name="right-icon" />
+        </>
+      )}
+    </button>
+  )
+}

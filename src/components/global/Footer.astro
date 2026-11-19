@@ -1,0 +1,186 @@
+---
+// Assets
+import { Image } from "astro:assets";
+import KattLogo from "@/images/agent/katt-logo-white.png";
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Button from "@/components/fundations/elements/Button.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+// Data
+import { agent, paths } from "@/lib/agent";
+
+const footerLinks = [
+  {
+    title: "Your path",
+    links: [
+      ...paths.map((p) => ({ name: p.label, href: `/#${p.id}` })),
+      { name: "International investors", href: "/#foreign-investors" },
+    ],
+  },
+  {
+    title: "About",
+    links: [
+      { name: `About ${agent.shortName}`, href: "/#about" },
+      { name: "How it works", href: "/#how-it-works" },
+      { name: "Reviews", href: "/#reviews" },
+      { name: "Areas served", href: "/#areas" },
+      { name: "Questions", href: "/#faq" },
+    ],
+  },
+  {
+    title: "Listings",
+    links: [
+      { name: "Featured listings", href: agent.listingsUrl, external: true },
+      { name: "Search all homes", href: agent.searchUrl, external: true },
+      { name: agent.team, href: agent.agentPageUrl, external: true },
+    ],
+  },
+  {
+    title: "Contact",
+    links: [
+      { name: agent.cell.label, href: agent.cell.href },
+      { name: agent.email.label, href: agent.email.href },
+      { name: "Book a discovery call", href: agent.bookingUrl, external: true },
+    ],
+  },
+];
+const bottomLinks = [
+  { name: "Privacy policy", href: "/legal/privacy-policy" },
+  { name: "Terms of service", href: "/legal/terms-of-service" },
+];
+const linkClass = "text-sm transition-colors text-background/60 hover:text-background";
+---
+
+<footer class="overflow-hidden text-background bg-foreground/95">
+  <Wrapper variant="standard" class="py-24">
+    <div class="grid grid-cols-1 gap-12 lg:grid-cols-12">
+      <Text
+        tag="h2"
+        variant="displayLG"
+        class="font-semibold leading-none tracking-tight lg:col-span-7 text-balance"
+      >
+        Thinking of moving? Start with a 20-minute call.
+      </Text>
+      <div class="flex flex-col gap-8 lg:col-span-5">
+        <Text tag="p" variant="textLG" class="text-background/60 text-pretty">
+          No pressure and no paperwork. Tell {agent.shortName} where you are today and leave with clear next steps for buying, selling or investing.
+        </Text>
+        <div class="flex flex-wrap items-center gap-6">
+          <Button isLink size="sm" variant="inverted" href={agent.bookingUrl} target="_blank" rel="noopener noreferrer" class="w-fit">
+            Book a discovery call
+          </Button>
+          <a href={agent.cell.href} class={linkClass}>Or call {agent.cell.label}</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-8 pt-8 mt-24 border-t sm:grid-cols-2 lg:grid-cols-4 border-background/15">
+      <div>
+        <Text tag="h3" variant="textBase" class="font-medium">
+          {`${agent.team}, ${agent.address.city}`}
+        </Text>
+        <address class="mt-1 text-sm not-italic text-background/60">
+          {`${agent.address.street}, ${agent.address.city} ${agent.address.region} ${agent.address.postalCode}`}
+        </address>
+      </div>
+      <div>
+        <Text tag="h3" variant="textBase" class="font-medium">Office hours</Text>
+        <p class="mt-1 text-sm text-background/60">{agent.officeHours}</p>
+      </div>
+      <div>
+        <Text tag="h3" variant="textBase" class="font-medium">Phone</Text>
+        <a href={agent.cell.href} class={`block mt-1 ${linkClass}`}>{agent.cell.label}</a>
+      </div>
+      <a
+        href={agent.agentPageUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${agent.team}, brokered by ${agent.brokerage}`}
+        class="flex items-center lg:justify-end"
+      >
+        <Image
+          src={KattLogo}
+          alt={agent.team}
+          width={160}
+          densities={[1, 2]}
+          loading="lazy"
+          decoding="async"
+          class="w-auto h-8"
+        />
+      </a>
+    </div>
+
+    <div class="grid grid-cols-2 gap-8 pt-8 mt-24 border-t md:grid-cols-5 border-background/15">
+      {
+        footerLinks.map((section) => (
+          <nav aria-label={section.title}>
+            <Text tag="h3" variant="textSM" class="font-medium">
+              {section.title}
+            </Text>
+            <ul class="mt-4 space-y-2" role="list">
+              {section.links.map((link) => (
+                <li>
+                  <a
+                    href={link.href}
+                    class={linkClass}
+                    target={"external" in link ? "_blank" : undefined}
+                    rel={"external" in link ? "noopener noreferrer" : undefined}
+                  >
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))
+      }
+      <nav aria-label="Follow">
+        <Text tag="h3" variant="textSM" class="font-medium">
+          Follow
+        </Text>
+        <ul class="mt-4 space-y-2" role="list">
+          {
+            agent.socials.map((social) => (
+              <li>
+                <a href={social.href} class={linkClass}>
+                  {social.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+
+    <svg viewBox="0 0 1000 208" class="block w-full mt-24 fill-current select-none" aria-hidden="true">
+      <text x="0" y="156" font-size="210" font-weight="600" textLength="1000" lengthAdjust="spacing">aderealty</text>
+    </svg>
+
+    <div class="flex flex-col justify-between gap-4 pt-8 mt-12 text-xs border-t md:flex-row md:items-center border-background/15">
+      <p class="text-background/60">
+        {`© ${new Date().getFullYear()} ${agent.name}, ${agent.title}`}
+      </p>
+      <ul class="flex flex-wrap gap-x-6 gap-y-2" role="list">
+        {
+          bottomLinks.map((link) => (
+            <li>
+              <a href={link.href} class="text-xs transition-colors text-background/60 hover:text-background">
+                {link.name}
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a
+            href="https://bluebirdweb.ca"
+            target="_blank"
+            rel="noopener"
+            class="text-xs transition-colors text-background/60 hover:text-background"
+          >
+            Website by Bluebird Web
+          </a>
+        </li>
+      </ul>
+    </div>
+  </Wrapper>
+</footer>

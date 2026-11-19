@@ -1,0 +1,12 @@
+---
+description: Global conventions for the Westend Lexington Astro theme — imports, fundations folder, minimal diffs, Lexington links.
+alwaysApply: true
+---
+
+# Westend (Lexington Themes) — global rules
+
+- **Imports:** Use the project alias `@/` for `src/` (e.g. `@/layouts/BaseLayout.astro`, `@/components/fundations/...`). Do not introduce path styles that clash with `tsconfig.json` paths.
+- **`fundations` spelling:** The directory is `src/components/fundations/` (intentional). Never rename it; update references only if a file move is unavoidable.
+- **Scope:** Prefer the smallest change that satisfies the task. Match existing layout + component patterns; avoid drive-by refactors or new dependencies unless they appear in `package.json`.
+- **Lexington references:** Theme docs and support URLs are listed in the repo root `README.md` and `AGENTS.md` (westend template, documentation, changelog, support). Prefer linking those real URLs over inventing support paths.
+- **Tailwind / tokens:** Global design tokens and plugins live in `src/styles/colors.css` (six semantic `@theme` colors) and `src/styles/global.css` (Tailwind import, plugins). Prefer extending tokens there rather than scattering magic values.

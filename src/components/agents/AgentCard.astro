@@ -1,0 +1,42 @@
+---
+// Assets
+import { Image } from "astro:assets";
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+// Content
+const { name, role, url, photo } = {
+  url: "/agents/" + Astro.props.agent.id,
+  name: Astro.props.agent.data.name,
+  role: Astro.props.agent.data.role,
+  photo: Astro.props.agent.data.photo?.url,
+};
+const { city, languages } = Astro.props.agent.data;
+---
+
+<article class="relative flex flex-col gap-4 group">
+  <a
+    href={url}
+    title={`View profile: ${name}`}
+    aria-label={`View agent profile: ${name}`}
+    class="absolute inset-0 z-10"></a>
+  <div>
+    <Text tag="h3" variant="textSM" class="font-medium text-foreground"
+      >{name}</Text
+    >
+    <Text tag="p" variant="textSM" class="text-muted-foreground">{role}</Text>
+    <Text tag="p" variant="textXS" class="mt-1 text-foreground">
+      {city}, speaks {languages.join(", ")}
+    </Text>
+  </div>
+  <div class="relative order-first overflow-hidden rounded-lg">
+    <Image
+      src={photo}
+      alt={name}
+      width={800}
+      height={800}
+      widths={[480, 800, 1000]}
+      sizes="(min-width: 1024px) 17vw, (min-width: 768px) 33vw, 50vw"
+      class="object-cover object-center w-full aspect-8/12 transition duration-300 ease-out group-hover:scale-105"
+    />
+  </div>
+</article>

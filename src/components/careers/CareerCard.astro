@@ -1,0 +1,43 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Button from "@/components/fundations/elements/Button.astro";
+// Content
+const { title, department, type, location, description, url } = {
+  url: "/careers/" + Astro.props.career.id,
+  title: Astro.props.career.data.title,
+  department: Astro.props.career.data.department,
+  type: Astro.props.career.data.type,
+  location: Astro.props.career.data.location,
+  description: Astro.props.career.data.description,
+};
+---
+
+<article class="relative flex flex-col h-full justify-between gap-12">
+  <a
+    href={url}
+    title={`View position: ${title}`}
+    aria-label={`View career opportunity: ${title}`}
+    class="absolute inset-0 z-10"></a>
+
+  <div>
+    <div class="relative pl-4 border-l border-border">
+      <Text tag="h3" variant="textSM" class="font-medium text-foreground">
+        {title}
+      </Text>
+      <Text tag="p" variant="textSM" class="text-muted-foreground">
+        {department}
+      </Text>
+      <Text tag="p" variant="textXS" class="text-muted-foreground mt-4">
+        {location}
+      </Text>
+    </div>
+
+    <Text tag="p" variant="textSM" class="text-muted-foreground line-clamp-3 mt-8">
+      {description}
+    </Text>
+  </div>
+  <Button isLink size="xs" variant="muted" href={url} class="w-fit">
+    View details
+  </Button>
+</article>

@@ -1,0 +1,332 @@
+---
+import { getCollection } from "astro:content";
+import SearchIcon from "@/components/fundations/icons/Search.astro";
+
+const truncate = (value?: string | null, limit = 140) => {
+  if (!value) return "";
+  const clean = value.replace(/\s+/g, " ").trim();
+  if (clean.length <= limit) return clean;
+  return `${clean.slice(0, Math.max(0, limit - 1)).trim()}…`;
+};
+const humanize = (value?: string | null) =>
+  value
+    ? value.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())
+    : "";
+const toIso = (value?: Date | null) => (value ? value.toISOString() : null);
+
+type RawSearchItem = {
+  title: string;
+  description?: string | null;
+  url: string;
+  type: string;
+  meta?: string | null;
+  date?: string | null;
+};
+
+type SearchItem = {
+  title: string;
+  description: string;
+  url: string;
+  type: string;
+  meta: string;
+  date: string | null;
+};
+
+const [
+  blogEntries,
+  propertyEntries,
+  agentEntries,
+  serviceEntries,
+  resourceEntries,
+  legalEntries,
+  neighborhoodEntries,
+  careerEntries,
+  openHouseEntries,
+  storyEntries,
+] = await Promise.all([
+  getCollection("posts"),
+  getCollection("properties"),
+  getCollection("agents"),
+  getCollection("services"),
+  getCollection("resources"),
+  getCollection("legal"),
+  getCollection("neighborhoods"),
+  getCollection("careers"),
+  getCollection("openHouses"),
+  getCollection("stories"),
+]);
+
+const rawSearchItems: RawSearchItem[] = [
+  ...blogEntries.map((post) => ({
+    title: post.data.title,
+    description: truncate(post.data.description, 180),
+    url: `/blog/posts/${post.id}`,
+    type: "Blog",
+    date: toIso(post.data.pubDate),
+    meta: "",
+  })),
+  ...propertyEntries.map((property) => {
+    const status = property.data.status || "for-sale";
+    const location = [
+      property.data.address,
+      property.data.city,
+      property.data.country,
+    ]
+      .filter(Boolean)
+      .join(", ");
+    const quickFacts = [
+      property.data.bedrooms ? `${property.data.bedrooms} bd` : null,
+      property.data.bathrooms ? `${property.data.bathrooms} ba` : null,
+      property.data.areaSqm ? `${property.data.areaSqm} m²` : null,
+    ]
+      .filter(Boolean)
+      .join(", ");
+    return {
+      title: property.data.title,
+      description: truncate(
+        property.data.tagline || quickFacts || location,
+        180
+      ),
+      url: `/properties/${status}/${property.id}`,
+      type: "Property",
+      meta: [location, humanize(property.data.propertyType), humanize(status)]
+        .filter(Boolean)
+        .join(", "),
+      date: property.data.pubDate ? toIso(property.data.pubDate) : null,
+    };
+  }),
+  ...agentEntries.map((agent) => ({
+    title: agent.data.name,
+    description: truncate(agent.data.role || agent.data.bio, 180),
+    url: `/agents/${agent.id}`,
+    type: "Agent",
+    meta: [agent.data.role, agent.data.email].filter(Boolean).join(", "),
+  })),
+  ...serviceEntries.map((service) => ({
+    title: service.data.name,
+    description: truncate(
+      service.data.description || service.data.tagline,
+      180
+    ),
+    url: `/services/${service.id}`,
+    type: "Service",
+    meta: humanize(service.data.category),
+  })),
+  ...resourceEntries.map((resource) => ({
+    title: resource.data.page,
+    description: "",
+    url: `/resources/${resource.id}`,
+    type: "Resource",
+    date: toIso(resource.data.pubDate),
+  })),
+  ...legalEntries.map((entry) => ({
+    title: entry.data.page,
+    description: "",
+    url: `/legal/${entry.id}`,
+    type: "Legal",
+    date: toIso(entry.data.pubDate),
+  })),
+  ...neighborhoodEntries.map((neighborhood) => ({
+    title: neighborhood.data.name,
+    description: truncate(
+      neighborhood.data.summary || neighborhood.data.tagline,
+      180
+    ),
+    url: `/neighborhoods/${neighborhood.id}`,
+    type: "Neighborhood",
+    meta: neighborhood.data.tagline || "",
+  })),
+  ...careerEntries.map((career) => ({
+    title: career.data.title,
+    description: truncate(career.data.description, 180),
+    url: `/careers/${career.id}`,
+    type: "Career",
+    meta: [
+      career.data.department,
+      career.data.location,
+      humanize(career.data.type),
+    ]
+      .filter(Boolean)
+      .join(", "),
+    date: career.data.pubDate ? toIso(career.data.pubDate) : null,
+  })),
+  ...openHouseEntries.map((event) => ({
+    title: event.data.title,
+    description: truncate(event.data.note, 180),
+    url: `/open-houses/${event.id}`,
+    type: "Open house",
+    meta: [event.data.startTime, event.data.endTime]
+      .filter(Boolean)
+      .join(" to "),
+    date: toIso(event.data.date),
+  })),
+  ...storyEntries.map((story) => ({
+    title: story.data.name,
+    description: truncate(story.data.quote, 180),
+    url: `/stories/${story.id}`,
+    type: "Story",
+    meta: story.data.role,
+    date: toIso(story.data.pubDate),
+  })),
+];
+
+const searchItems: SearchItem[] = rawSearchItems.map((item) => ({
+  ...item,
+  description: item.description || "",
+  meta: item.meta || "",
+  date: item.date || null,
+}));
+
+const { class: className = "", ...rest } = Astro.props;
+---
+
+<div class="relative">
+  <button
+    type="button"
+    id="searchButton"
+    aria-label="Search site"
+    class={className}
+    {...rest}
+  >
+    Search
+  </button>
+  <div
+    id="searchModal"
+    data-lenis-prevent
+    class="fixed inset-0 z-50 hidden overflow-y-auto bg-foreground/10 backdrop-blur-sm"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div class="min-h-screen px-4 text-center">
+      <div
+        class="relative inline-block w-full max-w-xl bg-background p-8 mt-12 mb-8 text-left align-middle lg:mt-48 transition-all transform"
+      >
+        <div class="hidden">
+          <button
+            type="button"
+            id="closeSearch"
+            class="cursor-pointer text-muted-foreground hover:text-foreground"
+            aria-label="Close search"
+          >
+            ×
+          </button>
+        </div>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search site..."
+          class="w-full h-12 px-0 py-2 text-xs text-foreground bg-transparent border-b border-transparent placeholder:text-muted-foreground border-b-border focus:outline-none focus:border-b-foreground focus:ring-0 appearence-none"
+        />
+        <div
+          id="searchResults"
+          class="w-full mt-2 overflow-hidden overflow-y-auto rounded-lg max-h-100 divide-y divide-border scrollbar-hide"
+        >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="application/json" id="search-data" set:html={JSON.stringify(searchItems)} />
+<script>
+  import Fuse from "fuse.js";
+
+  type SearchItem = {
+    title: string;
+    description?: string;
+    meta?: string;
+    type: string;
+    url: string;
+    date?: string;
+  };
+
+  const items: SearchItem[] = JSON.parse(document.getElementById("search-data")?.textContent ?? "[]");
+  const searchButton = document.getElementById("searchButton") as HTMLElement;
+  const searchModal = document.getElementById("searchModal") as HTMLElement;
+  const searchInput = document.getElementById("searchInput") as HTMLInputElement;
+  const searchResults = document.getElementById("searchResults") as HTMLElement;
+  const closeSearch = document.getElementById("closeSearch") as HTMLElement;
+  const fuse = new Fuse(items, {
+    keys: ["title", "description", "meta", "type"],
+    threshold: 0.3,
+  });
+  searchResults.classList.add("hidden");
+
+  const formatDate = (value?: string) => {
+    if (!value) return "";
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return "";
+    return parsed.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" });
+  };
+  const buildMetaLine = (item: SearchItem) => {
+    const formattedDate = formatDate(item.date);
+    if (formattedDate && item.meta) return `${formattedDate}, ${item.meta}`;
+    return formattedDate || item.meta || "";
+  };
+  const openSearch = (event: Event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    searchModal.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+    setTimeout(() => searchInput.focus(), 100);
+  };
+  const closeSearchModal = (event?: Event) => {
+    event?.preventDefault();
+    event?.stopPropagation();
+    searchModal.classList.add("hidden");
+    document.body.style.overflow = "";
+    searchInput.value = "";
+    searchResults.innerHTML = "";
+    searchResults.classList.add("hidden");
+  };
+  const renderResults = (results: { item: SearchItem }[]) => {
+    if (!searchInput.value.trim()) {
+      searchResults.innerHTML = "";
+      searchResults.classList.add("hidden");
+      return;
+    }
+    if (results.length === 0) {
+      searchResults.innerHTML = `
+        <div>
+          <h3 class="p-4 duration-300 hover:bg-background/80 backdrop-blur bg-background/90">
+            There's nothing here.
+          </h3>
+        </div>
+      `;
+      searchResults.classList.remove("hidden");
+      return;
+    }
+    searchResults.innerHTML = results
+      .map(({ item }) => {
+        const metaLine = buildMetaLine(item);
+        const description = item.description
+          ? `<p class="block mt-1 text-xs text-muted-foreground">${item.description}</p>`
+          : "";
+        return `
+        <div class="relative block p-4 duration-300 hover:bg-background/80 backdrop-blur bg-background/90">
+          <a href="${item.url}" class="absolute inset-0 z-10"></a>
+          <p class="text-xs font-medium text-muted-foreground">${item.type}</p>
+          ${metaLine ? `<p class="mt-1 text-xs text-muted-foreground">${metaLine}</p>` : ""}
+          <h3 class="block mt-2 text-sm font-medium text-foreground">${item.title}</h3>
+          ${description}
+        </div>
+      `;
+      })
+      .join("");
+    searchResults.classList.remove("hidden");
+  };
+
+  searchButton.addEventListener("click", openSearch);
+  searchButton.addEventListener("touchend", openSearch);
+  closeSearch.addEventListener("click", closeSearchModal);
+  closeSearch.addEventListener("touchend", closeSearchModal);
+  searchInput.addEventListener("input", () => {
+    const value = searchInput.value.trim();
+    renderResults(value ? fuse.search(value) : []);
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !searchModal.classList.contains("hidden")) closeSearchModal();
+  });
+  searchModal.addEventListener("click", (event) => {
+    if (!(event.target as HTMLElement).closest(".inline-block")) closeSearchModal(event);
+  });
+</script>

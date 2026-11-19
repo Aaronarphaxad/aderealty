@@ -1,0 +1,80 @@
+---
+// Assets
+import { Image } from "astro:assets";
+import whyus from "@/images/assets/whyus.png";
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+const reasons = [
+  {
+    title: "Local market expertise",
+    description:
+      "We know the neighborhoods, schools, amenities, and market trends better than anyone else.",
+  },
+  {
+    title: "Full-service support",
+    description:
+      "From initial consultation to closing and beyond, we're with you every step of the way.",
+  },
+  {
+    title: "Advanced marketing",
+    description:
+      "Professional photography, virtual tours, and targeted digital marketing reach the right buyers.",
+  },
+  {
+    title: "Negotiation power",
+    description:
+      "Our experienced agents secure the best terms and prices for our clients, whether buying or selling.",
+  },
+  {
+    title: "Network and connections",
+    description:
+      "Access to off-market properties and trusted professionals (lenders, inspectors, contractors).",
+  },
+];
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24">
+    <HeadingWrapper text="why">
+      <Text
+        tag="h2"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        Reasons to choose Westend
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-8 text-muted-foreground">
+        We're a trusted partner for buyers and sellers looking for the best
+      </Text>
+      <div class="grid md:grid-cols-3 gap-y-8 gap-x-4 mt-24">
+        {
+          reasons.map((reason) => (
+            <div>
+              <Text
+                tag="h3"
+                variant="textBase"
+                class="font-medium text-foreground"
+              >
+                {reason.title}
+              </Text>
+              <Text tag="p" variant="textSM" class="text-muted-foreground text-pretty">
+                {reason.description}
+              </Text>
+            </div>
+          ))
+        }
+      </div>
+    </HeadingWrapper>
+    <Image
+      src={whyus}
+      alt="Luxury interior"
+      width={1480}
+      height={1200}
+      widths={[640, 1024, 1480]}
+      sizes="100vw"
+      class="object-cover size-full object-center mt-12 rounded-2xl"
+    />
+  </Wrapper>
+</section>

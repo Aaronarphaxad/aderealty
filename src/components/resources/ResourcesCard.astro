@@ -1,0 +1,29 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+// Icons
+import ArrowRight from "@/components/fundations/icons/ArrowRight.astro";
+
+// Content
+const { page, url } = {
+  url: "/resources/" + Astro.props.resource.id,
+  page: Astro.props.resource.data.page,
+};
+---
+
+<article class="relative py-4 flex items-cener justify-between">
+  <a
+    href={url}
+    title={`Read more: ${page}`}
+    aria-label={`Read resource: ${page}`}
+    class="absolute inset-0 z-10"></a>
+
+  <Text
+    tag="h3"
+    variant="textSM"
+    class="font-medium text-foreground lg:col-span-2"
+  >
+    {page}
+  </Text>
+  <ArrowRight class="hidden lg:block size-4" />
+</article>

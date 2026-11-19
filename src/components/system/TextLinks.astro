@@ -1,0 +1,27 @@
+---
+// Fundations
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+import Text from "@/components/fundations/elements/Text.astro";
+import FancyLink from "@/components/fundations/elements/FancyLink.astro";
+---
+
+<section>
+  <Wrapper variant="standard" class="pb-24">
+    <div class="pt-12 border-t border-border">
+      <HeadingWrapper text="Fancy link">
+        <Text tag="p" variant="textLG" class="text-muted-foreground text-balance">
+          The three dots gather to the left on hover. Light on the page, dark on photos and dark chips.
+        </Text>
+        <div class="grid grid-cols-1 mt-12 sm:grid-cols-2 gap-8">
+          <div class="flex flex-col justify-end p-8 rounded-lg aspect-4/3 bg-muted">
+            <FancyLink variant="light" href="#_">All properties</FancyLink>
+          </div>
+          <div class="flex flex-col justify-end p-8 rounded-lg aspect-4/3 bg-foreground">
+            <FancyLink variant="dark" href="#_">Meet the agents</FancyLink>
+          </div>
+        </div>
+      </HeadingWrapper>
+    </div>
+  </Wrapper>
+</section>

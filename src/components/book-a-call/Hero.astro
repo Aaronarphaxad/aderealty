@@ -1,0 +1,63 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+const benefits = [
+  {
+    title: "Free consultation",
+    description: "No obligation, just helpful advice",
+  },
+  {
+    title: "Expert guidance",
+    description: "Speak with experienced agents",
+  },
+  {
+    title: "Personalized advice",
+    description: "Solutions tailored to your needs",
+  },
+  {
+    title: "Flexible scheduling",
+    description: "Choose what works for you",
+  },
+];
+---
+
+<section>
+  <Wrapper variant="standard" class="pb-24 lg:pt-48 space-y-24">
+    <HeadingWrapper text="Bookings">
+      <Text
+        tag="h1"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        Book a consultation call
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-balance">
+        Schedule a free consultation with one of our real estate experts. We'll
+        discuss your needs, answer your questions, and help you plan your next
+        steps.
+      </Text>
+    </HeadingWrapper>
+    <HeadingWrapper text="What to expect">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        {
+          benefits.map((benefit) => (
+            <div>
+              <Text
+                tag="h3"
+                variant="textBase"
+                class="font-medium text-foreground"
+              >
+                {benefit.title}
+              </Text>
+              <Text tag="p" variant="textSM" class="text-muted-foreground text-pretty">
+                {benefit.description}
+              </Text>
+            </div>
+          ))
+        }
+      </div>
+    </HeadingWrapper>
+  </Wrapper>
+</section>

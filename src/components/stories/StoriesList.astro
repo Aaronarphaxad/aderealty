@@ -1,0 +1,33 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+// Components
+import StoryCard from "@/components/stories/StoryCard.astro";
+// Content
+import { getCollection } from "astro:content";
+const stories = (await getCollection("stories")).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24 lg:pt-48">
+    <HeadingWrapper text="Stories">
+      <Text
+        tag="h1"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        Homes we sold, and the people behind them
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-balance">
+        Every story is a real sale: the asking price, what the home went for and how long it took.
+      </Text>
+    </HeadingWrapper>
+    <div class="grid grid-cols-1 mt-24 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+      {stories.map((story) => <StoryCard story={story} />)}
+    </div>
+  </Wrapper>
+</section>

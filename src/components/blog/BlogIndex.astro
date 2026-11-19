@@ -1,0 +1,36 @@
+---
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+import BlogCard from "@/components/blog/BlogCard.astro";
+import { getCollection } from "astro:content";
+const allPosts = await getCollection("posts");
+allPosts.sort((a, b) => {
+  const dateA = new Date(a.data.pubDate).getTime(); // Convert to timestamp
+  const dateB = new Date(b.data.pubDate).getTime(); // Convert to timestamp
+  return dateB - dateA; // Compare timestamps
+});
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24 lg:pt-48">
+    <HeadingWrapper text="Blog">
+      <Text
+        tag="h1"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        Latest blog posts
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-balance">
+        Stay informed with our latest insights, market updates, and expert
+        advice on real estate trends, home buying tips, and industry news. Our
+        blog covers everything you need to know about making smart real estate
+        decisions.
+      </Text>
+    </HeadingWrapper>
+    <div class="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-24">
+      {allPosts.map((post) => <BlogCard post={post} />)}
+    </div>
+  </Wrapper>
+</section>

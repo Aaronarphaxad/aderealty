@@ -1,0 +1,20 @@
+---
+// Fundations
+import BaseLayout from "@/layouts/BaseLayout.astro";
+// Components
+import PropertyListing from "@/components/properties/PropertyListing.astro";
+// Content
+import { getCollection } from "astro:content";
+const properties = (await getCollection("properties")).sort(
+  (a, b) => (a.data.priority ?? 999) - (b.data.priority ?? 999)
+);
+---
+
+<BaseLayout>
+  <PropertyListing
+    label="Properties"
+    title="All properties"
+    text="Homes for sale and rent across Denmark, Sweden, Norway, Finland and Iceland."
+    properties={properties}
+  />
+</BaseLayout>

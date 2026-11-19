@@ -1,0 +1,35 @@
+---
+// Fundations
+import BaseLayout from "@/layouts/BaseLayout.astro";
+// Sections
+import LookingFor from "@/components/forms/LookingFor.astro";
+// Content
+import { getCollection } from "astro:content";
+import { formatEuro } from "@/lib/properties";
+import NeighborhoodHomes from "@/components/neighborhoods/NeighborhoodHomes.astro";
+import NeighborhoodHero from "@/components/neighborhoods/NeighborhoodHero.astro";
+const { frontmatter } = Astro.props;
+// Get neighborhood's slug from the current URL
+const neighborhoodSlug = Astro.url.pathname.split("/").filter(Boolean).pop();
+// Get all properties and filter by this neighborhood
+const allProperties = await getCollection("properties");
+const neighborhoodProperties = allProperties.filter(
+  (property) => property.data.neighborhood === neighborhoodSlug
+);
+const facts = [
+  { label: "City", value: frontmatter.city },
+  { label: "Commute", value: frontmatter.commute },
+  { label: "Schools", value: frontmatter.schools },
+  { label: "Average price per m²", value: formatEuro(frontmatter.avgPricePerSqm) },
+];
+---
+
+<BaseLayout>
+  <NeighborhoodHero frontmatter={frontmatter} facts={facts} />
+  {
+    neighborhoodProperties.length > 0 && (
+      <NeighborhoodHomes frontmatter={frontmatter} neighborhoodProperties={neighborhoodProperties} />
+    )
+  }
+  <LookingFor />
+</BaseLayout>

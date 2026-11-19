@@ -1,0 +1,35 @@
+---
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+import NeighborhoodsCard from "@/components/neighborhoods/NeighborhoodsCard.astro";
+import { getCollection } from "astro:content";
+const allNeighborhoods = await getCollection("neighborhoods");
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24 lg:pt-48">
+    <HeadingWrapper text="Neighborhoods">
+      <Text
+        tag="h1"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        Explore our neighborhoods
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-balance">
+        Our neighborhoods are unique and diverse, offering a wide range of
+        home styles and prices. Discover the perfect home for your family,
+        friends, or business.
+      </Text>
+    </HeadingWrapper>
+
+    <div class="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-24">
+      {
+        allNeighborhoods.map((neighborhood) => (
+          <NeighborhoodsCard neighborhood={neighborhood} />
+        ))
+      }
+    </div>
+  </Wrapper>
+</section>

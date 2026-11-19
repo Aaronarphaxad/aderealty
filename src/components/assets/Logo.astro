@@ -1,0 +1,24 @@
+---
+import { Image } from "astro:assets";
+import LogoMark from "@/images/agent/logo-mark.png";
+import { agent } from "@/lib/agent";
+
+const { class: className = "", ...rest } = Astro.props;
+---
+
+<span class={`flex items-center gap-2 ${className}`} {...rest}>
+  <Image
+    src={LogoMark}
+    alt=""
+    width={44}
+    height={36}
+    densities={[1, 2]}
+    loading="eager"
+    decoding="async"
+    aria-hidden="true"
+    class="h-9 w-auto"
+  />
+  <span class="text-sm font-medium leading-none tracking-tight text-foreground">
+    {agent.name}
+  </span>
+</span>

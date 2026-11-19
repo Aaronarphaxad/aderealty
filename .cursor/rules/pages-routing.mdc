@@ -1,0 +1,12 @@
+---
+description: Westend file-based routing, dynamic segments, and layout usage under src/pages.
+globs: src/pages/**
+---
+
+# Pages & routing (Westend)
+
+- **Layouts:** Section pages should use the matching layout from `src/layouts/` (`BlogLayout`, `PropertiesLayout`, `LegalLayout`, etc.) when that pattern already exists; marketing shells use `BaseLayout.astro`.
+- **Dynamic routes:** REST-style slugs use `[...slug].astro` with `getStaticPaths` + `getCollection` + `render()` from `astro:content`. Property listings also use **`[status].astro`** for filtered index pages.
+- **Property URLs:** Detail pages build `params.slug` as `` `${status}/${entry.id}` `` — keep `status` in sync with the `properties` schema enum in `src/content.config.ts`.
+- **Blog:** Posts live at `/blog/posts/[id]`; there are no tag pages. Do not assume markdown lives under `src/pages/blog/`.
+- **RSS:** `src/pages/rss.xml.js` exists; verify any RSS glob matches where posts actually live (`src/content/posts/`) if you change feed behavior.

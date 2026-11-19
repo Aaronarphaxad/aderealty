@@ -1,0 +1,94 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+// Sections
+import ValuationForm from "@/components/forms/ValuationForm.astro";
+const benefits = [
+  {
+    title: "Know your worth",
+    description:
+      "Understand your property's current market value based on real data, not guesswork.",
+  },
+  {
+    title: "Plan your future",
+    description:
+      "Make informed decisions about selling, refinancing, or home improvements.",
+  },
+  {
+    title: "Strategic pricing",
+    description:
+      "If you decide to sell, start with the right price to attract serious buyers quickly.",
+  },
+];
+const features = [
+  {
+    title: "Detailed market analysis",
+    description: "Recent comparable sales in your area",
+  },
+  {
+    title: "Estimated market value",
+    description: "Current estimated value range",
+  },
+  {
+    title: "Market trends",
+    description: "Local market conditions and outlook",
+  },
+  {
+    title: "Expert consultation",
+    description: "Follow-up call to discuss details",
+  },
+];
+---
+<section>
+    
+    <Wrapper variant="standard" class="pt-24 lg:pt-48 space-y-24">
+      <!-- Hero Section -->
+      <HeadingWrapper text="Services">
+        <Text
+          tag="h1"
+          variant="displayLG"
+          class="font-semibold leading-none text-foreground tracking-tight text-balance"
+        >
+          Get your free home valuation
+        </Text>
+        <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-balance">
+          Curious about your home's current market value? Get a professional,
+          no-obligation valuation from our expert team. It's completely free and
+          typically delivered within 24 hours.
+        </Text>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-12">
+          {
+            benefits.map((benefit) => (
+              <div>
+                <Text tag="h3" variant="textBase" class="font-medium text-foreground">
+                  {benefit.title}
+                </Text>
+                <Text tag="p" variant="textSM" class="text-muted-foreground text-pretty">
+                  {benefit.description}
+                </Text>
+              </div>
+            ))
+          }
+        </div>
+      </HeadingWrapper>
+      <HeadingWrapper text=" What you'll receive">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {
+            features.map((feature) => (
+              <div>
+                <Text tag="h3" variant="textBase" class="font-medium text-foreground">
+                  {feature.title}
+                </Text>
+                <Text tag="p" variant="textSM" class="text-muted-foreground text-pretty">
+                  {feature.description}
+                </Text>
+              </div>
+            ))
+          }
+        </div>
+      </HeadingWrapper>
+    </Wrapper>
+    
+</section>

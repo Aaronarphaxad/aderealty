@@ -1,0 +1,41 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import FancyLink from "@/components/fundations/elements/FancyLink.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+// Components
+import NeighborhoodsCard from "@/components/neighborhoods/NeighborhoodsCard.astro";
+// Content
+import { getCollection } from "astro:content";
+const properties = await getCollection("properties");
+const neighborhoods = (await getCollection("neighborhoods"))
+  .map((neighborhood) => ({
+    neighborhood,
+    homes: properties.filter((p) => p.data.neighborhood === neighborhood.id).length,
+  }))
+  .sort((a, b) => b.homes - a.homes)
+  .slice(0, 4);
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24">
+    <div class="flex flex-wrap gap-8 lg:items-end lg:justify-between">
+      <div class="lg:w-1/2">
+        <Text
+          tag="h2"
+          variant="displayLG"
+          class="font-semibold leading-none uppercase text-foreground tracking-tight text-balance"
+        >
+          Where we sell
+        </Text>
+        <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-pretty">
+          The streets we know best, with the commute, the schools and what a square metre costs.
+        </Text>
+      </div>
+      <FancyLink href="/neighborhoods">All neighborhoods</FancyLink>
+    </div>
+    <div class="grid grid-cols-1 mt-12 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+      {neighborhoods.map(({ neighborhood }) => <NeighborhoodsCard neighborhood={neighborhood} />)}
+    </div>
+  </Wrapper>
+</section>

@@ -1,0 +1,11 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import LegalDetail from "@/components/legal/LegalDetail.astro";
+const { frontmatter } = Astro.props;
+---
+
+<BaseLayout>
+  <LegalDetail frontmatter={frontmatter}>
+    <slot />
+  </LegalDetail>
+</BaseLayout>

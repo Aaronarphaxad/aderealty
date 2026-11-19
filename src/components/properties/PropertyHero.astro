@@ -1,0 +1,67 @@
+---
+import { Image } from "astro:assets";
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+import { formatEuro, formatViewingDate, priceText } from "@/lib/properties";
+const { frontmatter, property, viewing, perSqm } = Astro.props;
+---
+
+<section>
+  <Wrapper variant="standard" class="pt-24 pb-8 lg:pt-48">
+    <HeadingWrapper text={frontmatter.status.replace("-", " ")}>
+      <Text
+        tag="h1"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        {frontmatter.title}
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-pretty">
+        {frontmatter.tagline}
+      </Text>
+      <div class="mt-8">
+        <Text tag="h3" variant="textBase" class="font-medium text-foreground">
+          {frontmatter.address}
+        </Text>
+        <Text tag="p" variant="textBase" class="text-muted-foreground">
+          {frontmatter.city}{frontmatter.region && `, ${frontmatter.region}`}{
+            frontmatter.country && `, ${frontmatter.country}`
+          }
+        </Text>
+        <Text
+          tag="p"
+          variant="textBase"
+          class="flex flex-wrap mt-2 gap-x-6 gap-y-1 text-muted-foreground"
+        >
+          {priceText(property)}
+          {perSqm && <span>{formatEuro(perSqm)} per m²</span>}
+          <span>{frontmatter.bedrooms} beds</span>
+          <span>{frontmatter.areaSqm} m²</span>
+          {frontmatter.energyClass && <span>Energy {frontmatter.energyClass}</span>}
+        </Text>
+        {
+          viewing && (
+            <a
+              href={`/open-houses/${viewing.id}`}
+              class="inline-block mt-4 text-sm font-medium duration-300 text-accent hover:text-accent/80"
+            >
+              Open house {formatViewingDate(viewing.data.date)}, {viewing.data.startTime} to {viewing.data.endTime}
+            </a>
+          )
+        }
+      </div>
+    </HeadingWrapper>
+    <Image
+      src={frontmatter.coverImage.url}
+      alt={frontmatter.coverImage.alt}
+      width={1480}
+      height={1200}
+      loading="eager"
+      fetchpriority="high"
+      widths={[640, 1024, 1480]}
+      sizes="100vw"
+      class="object-cover mt-12 size-full object-center rounded-2xl max-h-200"
+    />
+  </Wrapper>
+</section>

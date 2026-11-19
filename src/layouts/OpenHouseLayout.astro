@@ -1,0 +1,87 @@
+---
+// Fundations
+import BaseLayout from "@/layouts/BaseLayout.astro";
+// Content
+import { getEntry, getCollection } from "astro:content";
+import NearbyOpenHouses from "@/components/openhouses/NearbyOpenHouses.astro";
+import OpenHouseDetails from "@/components/openhouses/OpenHouseDetails.astro";
+import OpenHouseHero from "@/components/openhouses/OpenHouseHero.astro";
+const { frontmatter } = Astro.props;
+
+// Get property details
+let propertyData: any = null;
+let agentData: any = null;
+let neighborhoodName: string | null = null;
+
+if (frontmatter.property) {
+  const property = await getEntry("properties", frontmatter.property);
+  if (property) {
+    propertyData = property.data;
+
+    if (propertyData.neighborhood) {
+      const neighborhood = await getEntry("neighborhoods", propertyData.neighborhood);
+      neighborhoodName = neighborhood?.data.name ?? null;
+    }
+
+    // Get agent if property has one
+    if (propertyData.agent) {
+      const agent = await getEntry("agents", propertyData.agent);
+      if (agent) {
+        agentData = agent.data;
+      }
+    }
+  }
+}
+
+// Get open houses for other properties in the same neighborhood
+let neighborhoodOpenHouses: any[] = [];
+if (propertyData?.neighborhood) {
+  const allOpenHouses = await getCollection("openHouses");
+  const allProperties = await getCollection("properties");
+  // Get current open house slug from URL
+  const currentSlug = Astro.url.pathname.split("/").filter(Boolean).pop();
+
+  // Find other properties in the same neighborhood
+  const neighborhoodProperties = allProperties.filter(
+    (property) =>
+      property.data.neighborhood === propertyData.neighborhood &&
+      property.id !== frontmatter.property // Exclude current property
+  );
+
+  // Get open houses for those properties
+  neighborhoodOpenHouses = allOpenHouses.filter(
+    (openHouse) =>
+      neighborhoodProperties.some(
+        (prop) => prop.id === openHouse.data.property
+      ) && openHouse.id !== currentSlug // Exclude current open house
+  );
+}
+
+// Format date and time
+const formattedDate = new Date(frontmatter.date).toLocaleDateString("en-US", {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+
+const dayOfWeek = new Date(frontmatter.date).toLocaleDateString("en-US", {
+  weekday: "short",
+});
+
+const monthDay = new Date(frontmatter.date).toLocaleDateString("en-US", {
+  month: "short",
+  day: "numeric",
+});
+---
+
+<BaseLayout>
+  <OpenHouseHero frontmatter={frontmatter} propertyData={propertyData} formattedDate={formattedDate} />
+
+  <OpenHouseDetails frontmatter={frontmatter} propertyData={propertyData} agentData={agentData} neighborhoodName={neighborhoodName} />
+  {
+    neighborhoodOpenHouses.length > 0 && (
+      <NearbyOpenHouses neighborhoodOpenHouses={neighborhoodOpenHouses} />
+    )
+  }
+</BaseLayout>

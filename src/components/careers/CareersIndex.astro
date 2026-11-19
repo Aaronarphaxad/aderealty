@@ -1,0 +1,100 @@
+---
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+import CareerCard from "@/components/careers/CareerCard.astro";
+import { getCollection } from "astro:content";
+const allCareers = await getCollection("careers");
+allCareers.sort((a, b) => {
+  const dateA = a.data.pubDate ? new Date(a.data.pubDate).getTime() : 0;
+  const dateB = b.data.pubDate ? new Date(b.data.pubDate).getTime() : 0;
+  return dateB - dateA;
+});
+const careersByDepartment = allCareers.reduce(
+  (acc, career) => {
+    const department = career.data.department || "Other";
+    if (!acc[department]) {
+      acc[department] = [];
+    }
+    acc[department].push(career);
+    return acc;
+  },
+  {} as Record<string, typeof allCareers>
+);
+const departments = Object.keys(careersByDepartment).sort();
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24 lg:pt-48 space-y-24">
+    <HeadingWrapper text="Careers">
+      <Text
+        tag="h2"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        Join our team
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-8 text-muted-foreground text-pretty">
+        We're always looking for talented individuals to join our growing
+        team. Explore our current openings and find your next career
+        opportunity.
+      </Text>
+    </HeadingWrapper>
+    <HeadingWrapper text="All positions">
+      <Text
+        tag="h3"
+        variant="displayMD"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        <span>{allCareers.length}.</span>
+        <span>Current openings </span>
+      </Text>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-24 mt-12">
+        {allCareers.map((career) => <CareerCard career={career} />)}
+      </div>
+    </HeadingWrapper>
+    <HeadingWrapper text="Browse by department">
+      <div class="space-y-12">
+        {
+          departments.map((department) => {
+            const careers = careersByDepartment[department];
+            return (
+              <div>
+                <Text
+                  tag="h3"
+                  variant="displayMD"
+                  class="font-semibold leading-none text-foreground tracking-tight text-balance"
+                >
+                  <span>{careers.length}.</span>
+                  <span> {department}</span>
+                </Text>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-24 mt-12">
+                  {careers.map((career) => (
+                    <CareerCard career={career} />
+                  ))}
+                </div>
+              </div>
+            );
+          })
+        }
+      </div>
+
+      {
+        allCareers.length === 0 && (
+          <div class="py-12 text-center">
+            <Text tag="p" variant="textBase" class="text-muted-foreground">
+              No open positions at the moment. Check back soon or send us your
+              resume for future opportunities.
+            </Text>
+            <a
+              href="/book-a-call"
+              class="inline-block px-6 py-2 mt-4 text-sm font-medium text-background rounded-lg bg-accent hover:bg-accent/90 transition-colors"
+            >
+              Book a call
+            </a>
+          </div>
+        )
+      }
+    </HeadingWrapper>
+  </Wrapper>
+</section>

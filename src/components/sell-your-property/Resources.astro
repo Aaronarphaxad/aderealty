@@ -1,0 +1,33 @@
+---
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+// Components
+import ResourcesCard from "@/components/resources/ResourcesCard.astro";
+// Content
+import { getCollection } from "astro:content";
+const resources = await getCollection("resources");
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24">
+    <HeadingWrapper text="resources">
+      <Text
+        tag="h2"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        Seller resources
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-pretty">
+        Free tools and guides to help you navigate the home selling process.
+      </Text>
+      <div
+        class="divide-y divide-border border-y border-border mt-24"
+      >
+        {resources.map((resource) => <ResourcesCard resource={resource} />)}
+      </div>
+    </HeadingWrapper>
+  </Wrapper>
+</section>

@@ -1,0 +1,27 @@
+---
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import FancyLink from "@/components/fundations/elements/FancyLink.astro";
+import ProperySmallCard from "@/components/properties/ProperySmallCard.astro";
+const { neighborhood, neighborhoodProperties } = Astro.props;
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24">
+    <div class="flex flex-wrap lg:items-end lg:justify-between">
+      <Text
+        tag="h2"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance   uppercase lg:w-1/2"
+      >
+        More homes in {neighborhood?.data.name}
+      </Text>
+      <FancyLink href={`/neighborhoods/${neighborhood?.id}`}>About {neighborhood?.data.name}</FancyLink>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-12 mt-12">
+      {neighborhoodProperties.slice(0, 3).map((property) => (
+        <ProperySmallCard property={property} />
+      ))}
+    </div>
+  </Wrapper>
+</section>

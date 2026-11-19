@@ -1,0 +1,44 @@
+---
+// Fundations
+import "@/styles/global.css";
+import BaseHead from "@/components/fundations/head/BaseHead.astro";
+// Components
+import Footer from "@/components/global/Footer.astro";
+import Navigation from "@/components/global/Navigation.astro";
+
+// Hides the big logo, navigation, or footer on selected screens by passing props:
+// <BaseLayout hideFooter={true}>
+const { hideNavigation = false, hideFooter = false, transparentNavigation = false } = Astro.props as {
+  hideNavigation?: boolean;
+  hideFooter?: boolean;
+  transparentNavigation?: boolean;
+};
+// Only the home page is meant to rank. The remaining theme pages are unlinked and still
+// hold placeholder content, so they are kept out of Google until they are rewritten.
+const noindex = Astro.url.pathname !== "/";
+---
+
+<html lang="en-CA">
+  <head>
+    <BaseHead noindex={noindex} />
+  </head>
+  <body class="flex flex-col bg-background lg:min-h-svh">
+    {!hideNavigation && <Navigation transparent={transparentNavigation} />}
+    <main class="grow"><slot /></main>
+    {!hideFooter && <Footer />}
+    <!-- Load Lenis after first paint so it does not compete with LCP (font + hero image). CSS is in global.css. -->
+    <script>
+      const startLenis = async () => {
+        const { default: Lenis } = await import("lenis");
+        new Lenis({ autoRaf: true, anchors: true });
+      };
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(() => {
+          startLenis();
+        }, { timeout: 2000 });
+      } else {
+        window.addEventListener("load", () => startLenis(), { once: true });
+      }
+    </script>
+  </body>
+</html>

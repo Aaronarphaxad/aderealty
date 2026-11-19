@@ -1,0 +1,17 @@
+---
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import BookCallForm from "@/components/forms/BookCallForm.astro";
+
+import Aside from "@/components/book-a-call/Aside.astro";
+---
+
+<section>
+  <Wrapper variant="standard" class="pt-12 pb-24">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+      <Aside />
+      <div class="lg:col-span-9">
+        <BookCallForm />
+      </div>
+    </div>
+  </Wrapper>
+</section>

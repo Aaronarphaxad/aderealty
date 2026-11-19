@@ -1,0 +1,32 @@
+---
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+import AgentCard from "@/components/agents/AgentCard.astro";
+import { getCollection } from "astro:content";
+const allAgents = await getCollection("agents");
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24 lg:pt-48">
+    <HeadingWrapper text="Agents">
+      <Text
+        tag="h1"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        Meet our agents
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-balance">
+        Our experienced leadership team brings decades of combined expertise
+        in real estate, finance, and customer service. Each member has a
+        proven track record of successful transactions and client
+        satisfaction, bringing deep knowledge of local markets and
+        international trends.
+      </Text>
+    </HeadingWrapper>
+    <div class="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-24">
+      {allAgents.map((agent) => <AgentCard agent={agent} />)}
+    </div>
+  </Wrapper>
+</section>

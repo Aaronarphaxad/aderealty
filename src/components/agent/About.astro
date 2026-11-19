@@ -1,0 +1,102 @@
+---
+// Assets
+import { Image } from "astro:assets";
+import Portrait from "@/images/agent/portrait.jpg";
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+// Components
+import SectionHeading from "@/components/agent/SectionHeading.astro";
+// Data
+import { agent, areas } from "@/lib/agent";
+
+const yearsLicensed = new Date().getFullYear() - agent.licensedSince;
+const facts = [
+  { label: "Team", value: agent.team },
+  { label: "Brokerage", value: agent.brokerageLegal },
+  { label: "Areas", value: areas.join(", ") },
+  { label: "Languages", value: agent.languages.join(", ") },
+];
+const milestones = [
+  {
+    number: String(yearsLicensed),
+    label: `years as a licensed REALTOR® in British Columbia, since ${agent.licensedSince}.`,
+  },
+  {
+    number: "MBA",
+    label: "with a grounding in strategy, negotiation and client-first solutions.",
+  },
+  {
+    number: "5",
+    label: "years in management consulting across Western Canada before real estate.",
+  },
+];
+---
+
+<section id="about" class="scroll-mt-20">
+  <Wrapper variant="standard" class="py-24">
+    <SectionHeading title="The difference between a transaction and a journey is who guides you." />
+    <div class="grid grid-cols-1 gap-3 mt-12 md:grid-cols-6 xl:grid-cols-12">
+      <div class="overflow-hidden aspect-3/4 max-md:-mx-8 max-md:rounded-none md:rounded-2xl md:col-span-2 md:aspect-auto xl:col-span-4 xl:row-span-2">
+        <Image
+          src={Portrait}
+          alt={`${agent.name}, ${agent.title} in ${agent.address.city}, ${agent.address.region}`}
+          widths={[390, 480, 640, 800]}
+          sizes="(min-width: 1280px) 33vw, (min-width: 768px) 33vw, 100vw"
+          loading="lazy"
+          class="object-cover object-[center_12%] w-full h-full"
+        />
+      </div>
+      <div class="flex flex-col justify-between gap-8 p-6 rounded-2xl bg-muted md:col-span-4 xl:col-span-8">
+        <div class="space-y-4">
+          <Text tag="p" variant="textBase" class="text-foreground text-pretty">
+            {agent.shortName} came to real estate after five years in management consultancy across
+            Western Canada, where his work centred on strategic planning. With an MBA behind him,
+            he brings that same discipline to every file: clear analysis, careful negotiation and
+            advice built around your goals.
+          </Text>
+          <Text tag="p" variant="textBase" class="text-muted-foreground text-pretty">
+            Having been on the other side of the table before joining the industry, he knows both
+            sides of a transaction and what to look for when choosing an agent.
+          </Text>
+          <Text tag="p" variant="textBase" class="text-muted-foreground text-pretty">
+            Outside real estate, {agent.shortName} spends time with family and serves the Surrey
+            community, where he manages his church soccer team.
+          </Text>
+        </div>
+        <dl class="grid grid-cols-1 p-4 gap-x-8 rounded-xl bg-background sm:grid-cols-2">
+          {
+            facts.map((fact) => (
+              <div class="flex items-baseline justify-between gap-4 py-2 border-t border-border first:border-0 sm:nth-2:border-0">
+                <dt class="text-xs text-muted-foreground">{fact.label}</dt>
+                <dd class="text-sm font-medium text-right text-foreground">{fact.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <a
+          href={agent.licenceLookupUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm font-medium underline transition-colors text-foreground underline-offset-4 hover:text-accent"
+        >
+          Verify licence on BCFSA
+        </a>
+      </div>
+      <ul class="grid grid-cols-1 gap-3 md:col-span-6 md:grid-cols-3 xl:col-span-8" role="list">
+        {
+          milestones.map((item) => (
+            <li class="flex flex-col justify-between gap-8 p-6 rounded-2xl bg-muted">
+              <Text tag="span" variant="displayLG" class="block font-semibold leading-none tracking-tighter text-foreground">
+                {item.number}
+              </Text>
+              <Text tag="p" variant="textSM" class="text-foreground text-pretty">
+                {item.label}
+              </Text>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </Wrapper>
+</section>

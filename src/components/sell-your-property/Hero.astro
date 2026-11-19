@@ -1,0 +1,155 @@
+---
+// Assets
+import { Image } from "astro:assets";
+import sell from "@/images/assets/sell.png";
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import Button from "@/components/fundations/elements/Button.astro";
+import HeadingWrapper from "@/components/fundations/containers/HeadingWrapper.astro";
+const benefits = [
+  {
+    title: "Maximum exposure",
+    description:
+      "Professional photography, virtual tours, and targeted marketing across all major platforms reach thousands of potential buyers.",
+  },
+  {
+    title: "Expert pricing strategy",
+    description:
+      "We use data-driven analysis and market expertise to price your home competitively, attracting serious buyers while maximizing value.",
+  },
+  {
+    title: "Skilled negotiation",
+    description:
+      "Our experienced agents negotiate the best terms, from price to closing timeline, protecting your interests every step of the way.",
+  },
+  {
+    title: "Full-service support",
+    description:
+      "From staging advice to managing showings and handling paperwork, we take care of every detail so you don't have to.",
+  },
+  {
+    title: "Faster sales",
+    description:
+      "Our homes sell in 23 days on average, thanks to honest pricing and a full launch in the first week.",
+  },
+  {
+    title: "Higher sale prices",
+    description:
+      "Our sellers get 101% of the asking price on average, and well-priced homes often go above it.",
+  },
+];
+const stats = [
+  {
+    number: "90",
+    label: "Homes sold last year",
+  },
+  {
+    number: "23",
+    label: "Days to sell, on average",
+  },
+  {
+    number: "101%",
+    label: "Of the asking price, on average",
+  },
+  {
+    number: "1,400+",
+    label: "Homes sold since 2009",
+  },
+];
+---
+
+<section>
+  <Wrapper variant="standard" class="py-24 lg:pt-48">
+    <HeadingWrapper text="sell with us">
+      <Text
+        tag="h1"
+        variant="displayLG"
+        class="font-semibold leading-none text-foreground tracking-tight text-balance"
+      >
+        Sell your property with confidence
+      </Text>
+      <Text tag="p" variant="textLG" class="mt-4 text-muted-foreground text-balance">
+        Get the best price for your home with our expert marketing, proven
+        strategies, and personalized service. We handle everything from pricing
+        to closing.
+      </Text>
+      <div class="flex flex-wrap gap-2 mt-8">
+        <Button
+          href="/valuation"
+          isLink
+          variant="default"
+          size="sm"
+          class="w-full md:w-fit"
+          >Get a free valuation
+        </Button>
+        <Button
+          href="/book-a-call"
+          isLink
+          variant="muted"
+          size="sm"
+          class="w-full md:w-fit">Book a call</Button
+        >
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-12">
+        {
+          benefits.map((benefit) => (
+            <article>
+              <Text
+                tag="h3"
+                variant="textBase"
+                class="font-medium text-foreground"
+              >
+                {benefit.title}
+              </Text>
+              <Text tag="p" variant="textSM" class="text-muted-foreground text-pretty">
+                {benefit.description}
+              </Text>
+            </article>
+          ))
+        }
+      </div>
+    </HeadingWrapper>
+    <Image
+      src={sell}
+      alt="Luxury interior"
+      width={1480}
+      height={1200}
+      loading="eager"
+      fetchpriority="high"
+      widths={[640, 1024, 1480]}
+      sizes="100vw"
+      decoding="async"
+      class="object-cover size-full object-center mt-12 rounded-2xl"
+    />
+
+    <dl
+      class="mt-12 pt-12 border-t border-border grid grid-cols-2 md:grid-cols-4 gap-x-px gap-y-12"
+    >
+      {
+        stats.map((stat) => (
+          <div class="flex flex-col gap">
+            <dt>
+              <Text
+                tag="span"
+                variant="displayXL"
+                class="font-semibold leading-none tracking-tighter text-foreground"
+              >
+                {stat.number}
+              </Text>
+            </dt>
+            <dd>
+              <Text
+                tag="p"
+                variant="textBase"
+                class="mt-2 leading-relaxed text-muted-foreground text-balance"
+              >
+                {stat.label}
+              </Text>
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Wrapper>
+</section>

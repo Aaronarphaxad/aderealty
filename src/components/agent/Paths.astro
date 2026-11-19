@@ -1,0 +1,193 @@
+---
+// Assets
+import { Image } from "astro:assets";
+import FirstHome from "@/images/agent/first-home.webp";
+import Upsizing from "@/images/agent/upsizing.webp";
+import Downsizing from "@/images/agent/downsizing.webp";
+import Investing from "@/images/agent/investing.webp";
+// Fundations
+import Text from "@/components/fundations/elements/Text.astro";
+import Button from "@/components/fundations/elements/Button.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import ArrowRight from "@/components/fundations/icons/ArrowRight.astro";
+// Components
+import SectionHeading from "@/components/agent/SectionHeading.astro";
+// Data
+import { paths } from "@/lib/agent";
+
+const images = {
+  "first-home": FirstHome,
+  upsizing: Upsizing,
+  downsizing: Downsizing,
+  investing: Investing,
+};
+const slides = paths.map((path) => ({ ...path, image: images[path.id as keyof typeof images] }));
+---
+
+<section id="services" class="scroll-mt-20" data-carousel>
+  <Wrapper variant="standard" class="py-24">
+    <SectionHeading title="Where are you in your journey?">
+      What you need depends on your stage of home ownership. Pick yours and see how we would
+      work together.
+    </SectionHeading>
+    <div class="flex items-center justify-between gap-4 mt-8">
+      <div
+        role="tablist"
+        aria-label="Stage of home ownership"
+        class="flex max-w-full gap-1 p-1 overflow-x-auto border rounded-full scrollbar-hide bg-muted border-border"
+      >
+        {
+          slides.map((slide, index) => (
+            <Button
+              variant="none"
+              size="sm"
+              type="button"
+              role="tab"
+              id={`path-tab-${slide.id}`}
+              aria-controls={slide.id}
+              aria-selected={index === 0 ? "true" : "false"}
+              tabindex={index === 0 ? 0 : -1}
+              data-carousel-tab
+              class="shrink-0 text-muted-foreground hover:text-foreground aria-selected:bg-foreground aria-selected:text-background focus:outline-muted-foreground"
+            >
+              {slide.label}
+            </Button>
+          ))
+        }
+      </div>
+      <div class="hidden gap-2 sm:flex">
+        <Button variant="muted" size="sm" iconOnly type="button" aria-label="Previous stage" data-carousel-prev>
+          <ArrowRight slot="icon" size="sm" class="rotate-180" />
+        </Button>
+        <Button variant="muted" size="sm" iconOnly type="button" aria-label="Next stage" data-carousel-next>
+          <ArrowRight slot="icon" size="sm" />
+        </Button>
+      </div>
+    </div>
+    <div
+      class="relative flex gap-3 mt-12 overflow-x-auto snap-x snap-mandatory scrollbar-hide"
+      data-carousel-track
+    >
+      {
+        slides.map((slide) => (
+          <div
+            id={slide.id}
+            role="tabpanel"
+            aria-labelledby={`path-tab-${slide.id}`}
+            class="grid w-11/12 grid-cols-1 gap-3 p-3 border shrink-0 snap-start scroll-mt-24 rounded-2xl bg-muted border-border lg:grid-cols-2"
+          >
+            <div class="flex flex-col justify-between gap-8 p-3 lg:p-6">
+              <div>
+                <Text
+                  tag="h3"
+                  variant="displaySM"
+                  class="font-semibold leading-tight tracking-tight text-foreground text-balance"
+                >
+                  {slide.title}
+                </Text>
+                <Text tag="p" variant="textBase" class="mt-4 text-muted-foreground text-pretty">
+                  {slide.lead}
+                </Text>
+              </div>
+              <ul class="p-4 rounded-xl bg-background" role="list">
+                {
+                  slide.points.map((point) => (
+                    <li class="py-3 border-t border-border first:border-0 first:pt-0 last:pb-0">
+                      <Text tag="h4" variant="textSM" class="font-medium text-foreground">
+                        {point.title}
+                      </Text>
+                      <Text tag="p" variant="textSM" class="mt-1 text-muted-foreground text-pretty">
+                        {point.description}
+                      </Text>
+                    </li>
+                  ))
+                }
+              </ul>
+              <Button isLink={true} href="#contact" data-interest={slide.cta.interest} variant="default" size="sm" class="w-fit">
+                {slide.cta.label}
+              </Button>
+            </div>
+            <div class="overflow-hidden rounded-xl aspect-3/2 max-lg:order-first lg:aspect-auto">
+              <Image
+                src={slide.image}
+                alt={slide.imageAlt}
+                widths={[400, 640, 800]}
+                sizes="(min-width: 1024px) 40vw, 85vw"
+                quality={70}
+                loading="lazy"
+                decoding="async"
+                class="object-cover size-full"
+              />
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </Wrapper>
+</section>
+
+<script is:inline>
+  (() => {
+    const root = document.querySelector("[data-carousel]");
+    if (!root) return;
+    const track = root.querySelector("[data-carousel-track]");
+    const slides = [...track.children];
+    const tablist = root.querySelector("[role='tablist']");
+    const tabs = [...root.querySelectorAll("[data-carousel-tab]")];
+    const smooth = matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+    let current = 0;
+
+    const setActive = (index) => {
+      current = index;
+      tabs.forEach((tab, i) => {
+        tab.setAttribute("aria-selected", String(i === index));
+        tab.tabIndex = i === index ? 0 : -1;
+      });
+      // On narrow screens the pills scroll sideways, so keep the selected one in view
+      const tab = tabs[index].getBoundingClientRect();
+      const list = tablist.getBoundingClientRect();
+      const offset = tab.left - list.left - (list.width - tab.width) / 2;
+      tablist.scrollTo({ left: tablist.scrollLeft + offset, behavior: smooth });
+    };
+    const goTo = (index, behavior = smooth) => {
+      const target = Math.max(0, Math.min(slides.length - 1, index));
+      track.scrollTo({ left: slides[target].offsetLeft, behavior });
+      setActive(target);
+      return target;
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => goTo(index));
+      tab.addEventListener("keydown", (e) => {
+        const step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+        if (!step) return;
+        e.preventDefault();
+        tabs[goTo(index + step)].focus();
+      });
+    });
+    root.querySelector("[data-carousel-prev]").addEventListener("click", () => goTo(current - 1));
+    root.querySelector("[data-carousel-next]").addEventListener("click", () => goTo(current + 1));
+
+    // Keep the tabs in step when the cards are swiped
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(slides.indexOf(entry.target));
+        });
+      },
+      { root: track, threshold: 0.6 }
+    );
+    slides.forEach((slide) => observer.observe(slide));
+
+    // Header and footer links such as #upsizing open the matching card
+    const showHash = (hash, behavior) => {
+      const index = slides.findIndex((slide) => `#${slide.id}` === hash);
+      if (index > -1) goTo(index, behavior);
+    };
+    document.addEventListener("click", (e) => {
+      const link = e.target.closest("a[href*='#']");
+      if (link) showHash(link.hash);
+    });
+    showHash(location.hash, "auto");
+  })();
+</script>
