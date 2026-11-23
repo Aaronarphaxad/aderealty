@@ -9,12 +9,16 @@ import Button from "@/components/fundations/elements/Button.astro";
 import Wrapper from "@/components/fundations/containers/Wrapper.astro";
 // Data
 import { agent } from "@/lib/agent";
+
+// Fixed two-line break for mobile height: "Your next address" / "Starts here."
+const taglineLead = "Your next address";
+const taglineRest = "Starts here";
 ---
 
-<section id="top" class="relative overflow-hidden min-h-svh">
-  <div class="absolute inset-0 pointer-events-none max-lg:mask-t-from-50% mask-b-from-80%">
-    <div class="size-full lg:mask-linear-135 lg:mask-linear-from-transparent lg:mask-linear-from-20% lg:mask-linear-to-black lg:mask-linear-to-55%">
-      <!-- LCP image: AVIF/WebP, priority fetch, mobile-first widths (Lighthouse uses ~412px). -->
+<section id="top" class="relative overflow-x-clip overflow-y-hidden min-h-svh">
+  <!-- Full-bleed photo. Short phones use little/no scale so roofs stay under the copy. -->
+  <div class="absolute inset-0 pointer-events-none mask-b-from-80% max-lg:mask-t-from-80%">
+    <div class="size-full overflow-hidden lg:mask-linear-135 lg:mask-linear-from-transparent lg:mask-linear-from-20% lg:mask-linear-to-black lg:mask-linear-to-55%">
       <Picture
         src={HeroHouse}
         formats={["avif", "webp"]}
@@ -25,43 +29,59 @@ import { agent } from "@/lib/agent";
         quality={70}
         priority
         pictureAttributes={{ class: "contents" }}
-        class="object-cover object-bottom lg:object-center size-full"
+        class="object-cover object-bottom size-full origin-bottom max-lg:scale-100 [@media(min-height:740px)]:max-lg:scale-[1.35] lg:object-center lg:scale-100"
       />
     </div>
   </div>
-  <Wrapper variant="standard" class="relative z-10 pt-32 pb-12 lg:pb-24">
+
+  <!-- Soft sky fade only — no panel. Taller on short phones so copy clears the roofs. -->
+  <div
+    class="absolute inset-x-0 top-0 pointer-events-none lg:hidden h-[58%] [@media(min-height:740px)]:h-[42%] bg-[linear-gradient(to_bottom,color-mix(in_oklab,var(--color-tint-sky)_65%,white)_0%,color-mix(in_oklab,var(--color-tint-sky)_30%,transparent)_65%,transparent_100%)]"
+    aria-hidden="true"
+  ></div>
+
+  <Wrapper
+    variant="standard"
+    class="relative z-10 pt-20 pb-6 min-h-svh sm:pt-24 sm:pb-8 lg:pt-32 lg:pb-24 [@media(max-height:700px)]:pt-16 [@media(max-height:700px)]:pb-4"
+  >
     <Text
       tag="h1"
       variant="display2XL"
-      class="font-medium leading-none tracking-tighter text-foreground text-balance lg:text-pretty"
+      class="!text-[1.65rem] leading-[0.95] min-[380px]:!text-[1.85rem] sm:!text-5xl md:!text-6xl lg:!text-7xl 2xl:!text-8xl font-medium tracking-tighter text-foreground lg:text-pretty"
     >
-      <span class="block lg:pl-48 2xl:pl-64">{agent.tagline.split(" ").slice(0, 3).join(" ")}</span>
-      <span class="block">{agent.tagline.split(" ").slice(3).join(" ")}.</span>
+      <span class="block whitespace-nowrap lg:pl-48 2xl:pl-64">{taglineLead}</span>
+      <span class="block whitespace-nowrap">{taglineRest}.</span>
     </Text>
-    <div class="flex items-start max-w-lg gap-4 mt-8">
+
+    <div class="flex items-start max-w-md gap-3 mt-3 sm:max-w-lg sm:gap-4 sm:mt-8 [@media(max-height:700px)]:mt-3">
       <Picture
         src={Portrait}
         formats={["avif", "webp"]}
         fallbackFormat="webp"
         alt={`${agent.name}, ${agent.title}`}
-        width={72}
-        height={96}
+        width={64}
+        height={80}
         densities={[1, 2]}
         quality={65}
         loading="eager"
         fetchpriority="low"
         pictureAttributes={{ class: "contents" }}
-        class="object-cover object-[center_12%] rounded-lg w-16 h-24 shrink-0"
+        class="object-cover object-[center_12%] rounded-lg w-11 h-14 shrink-0 min-[380px]:w-12 min-[380px]:h-16 sm:w-16 sm:h-24"
       />
-      <Text tag="p" variant="textLG" class="text-left text-muted-foreground">
+      <Text
+        tag="p"
+        variant="textLG"
+        class="!text-[0.8125rem] leading-snug min-[380px]:!text-sm sm:!text-base md:!text-lg text-left text-foreground/90 text-pretty lg:text-muted-foreground"
+      >
         Hi, I'm {agent.shortName}. I help people buy, sell and invest across Surrey, Vancouver and the Lower Mainland.
       </Text>
     </div>
-    <div class="flex flex-wrap gap-3 mt-8">
+
+    <div class="flex flex-wrap gap-2.5 mt-3 sm:gap-3 sm:mt-8">
       <Button isLink={true} href="#first-home" variant="default" size="sm" class="w-fit">
         I'm buying
       </Button>
-      <Button isLink={true} href="#contact" variant="outline" size="sm" class="w-fit">
+      <Button isLink={true} href="#contact" variant="outline" size="sm" class="w-fit bg-background/90">
         I'm selling
       </Button>
     </div>
