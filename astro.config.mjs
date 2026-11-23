@@ -1,9 +1,11 @@
 import { defineConfig } from "astro/config";
-import tailwindcss from "@tailwindcss/vite";  
+import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 
-// Keep in sync with SITE_URL in src/lib/agent.ts.
-const site = "https://aderealty.ca";
+// Netlify sets URL (site primary) and DEPLOY_PRIME_URL (this deploy).
+// Local / unset builds fall back to the final production domain.
+const site =
+  process.env.URL || process.env.DEPLOY_PRIME_URL || "https://aderealty.ca";
 
 export default defineConfig({
   vite: {

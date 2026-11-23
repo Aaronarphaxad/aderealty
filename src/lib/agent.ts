@@ -1,4 +1,5 @@
-export const SITE_URL = "https://aderealty.ca";
+// Follows Astro `site` (Netlify URL / DEPLOY_PRIME_URL in CI, aderealty.ca locally).
+export const SITE_URL = import.meta.env.SITE || "https://aderealty.ca";
 
 // Static site: point this at a real endpoint (Netlify Forms, Formspree, ...) before launch.
 export const FORM_ACTION = "#";
