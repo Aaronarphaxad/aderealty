@@ -10,11 +10,12 @@ interface Props {
 }
 
 const { noindex = false } = Astro.props;
-const { title, description } = seo;
+const { title, description, ogTitle = title, ogDescription = description } = seo;
 const isHome = Astro.url.pathname === "/";
 const canonical = new URL(Astro.url.pathname, SITE_URL).href;
 const ogImage = await getImage({ src: HeroHouse, width: 1200, height: 630, format: "jpg" });
 const ogImageUrl = new URL(ogImage.src, SITE_URL).href;
+const ogImageAlt = `${agent.name}, ${agent.title} in ${agent.address.city}, ${agent.address.region}`;
 // Preload the LCP hero candidate for the home page (mobile-first width used by Lighthouse).
 const lcpImage = isHome
   ? await getImage({ src: HeroHouse, width: 640, format: "webp", quality: 70 })
@@ -30,24 +31,32 @@ const lcpImage = isHome
   robotsProps={noindex ? undefined : { maxImagePreview: "large", maxSnippet: -1 }}
   openGraph={{
     url: canonical,
-    title,
-    description,
+    title: ogTitle,
+    description: ogDescription,
     images: [
       {
         url: ogImageUrl,
+        secureUrl: ogImageUrl,
         width: 1200,
         height: 630,
-        alt: `${agent.name}, ${agent.title} in ${agent.address.city}, ${agent.address.region}`,
+        alt: ogImageAlt,
         type: "image/jpeg",
       },
     ],
-    site_name: `${agent.name}, ${agent.title}`,
+    site_name: `${agent.brand} · ${agent.name}`,
     type: "website",
     locale: "en_CA",
   }}
   twitter={{
     cardType: "summary_large_image",
   }}
+  additionalMetaTags={[
+    // AstroSeo's twitter prop only sets card/handle — platforms still need these.
+    { name: "twitter:title", content: ogTitle },
+    { name: "twitter:description", content: ogDescription },
+    { name: "twitter:image", content: ogImageUrl },
+    { name: "twitter:image:alt", content: ogImageAlt },
+  ]}
 />
 {GOOGLE_SITE_VERIFICATION && <meta name="google-site-verification" content={GOOGLE_SITE_VERIFICATION} />}
 {

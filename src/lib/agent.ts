@@ -6,12 +6,16 @@ export const FORM_ACTION = "#";
 // Google Search Console: paste the content value of the HTML tag verification method here.
 export const GOOGLE_SITE_VERIFICATION = "";
 
-// Search result title and description for the home page.
-// Keep the title under 60 characters and the description under 155 so Google shows them in full.
+// Search + link-preview copy for the home page.
+// title ≤60 chars, description ≤155 so Google and most messengers show them in full.
 export const seo = {
   title: "Surrey REALTOR® & Real Estate Agent | Adebiyi Aderinto",
   description:
     "Your next address starts here. Adebiyi Aderinto is a Surrey REALTOR® with Katrina & The Team, helping buyers and investors across Metro Vancouver.",
+  // Used for WhatsApp, iMessage, Slack, LinkedIn, X. Keep punchy and human.
+  ogTitle: "Adebiyi Aderinto · Surrey REALTOR®",
+  ogDescription:
+    "Your next address starts here. Buying, selling or investing in Surrey and Metro Vancouver? Book a discovery call with Ade.",
 };
 
 export const agent = {
