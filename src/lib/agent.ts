@@ -118,15 +118,14 @@ export const navLinks = [
   { label: "Selling", href: "#contact" },
   { label: "Upsizing", href: "#upsizing" },
   { label: "Downsizing", href: "#downsizing" },
+  { label: "International Investors", href: "#foreign-investors" },
 ];
 
 // Remaining sections, shown under the main links in the mobile menu
 export const secondaryLinks = [
-  { label: "Investing", href: "#investing" },
   { label: "About", href: "#about" },
   { label: "Process", href: "#how-it-works" },
   { label: "Listings", href: "#listings" },
-  { label: "International investors", href: "#foreign-investors" },
   { label: "Reviews", href: "#reviews" },
   { label: "Areas served", href: "#areas" },
   { label: "Questions", href: "#faq" },

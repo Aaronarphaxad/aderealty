@@ -19,17 +19,17 @@ const { transparent = false } = Astro.props as { transparent?: boolean };
   data-transparent-nav={transparent ? "" : undefined}
 >
   <Wrapper variant="standard" class="relative">
-    <div class="flex items-center justify-between py-3">
-      <a href="/" class="focus:outline-none">
+    <div class="flex items-center gap-4 py-3">
+      <a href="/" class="shrink-0 focus:outline-none">
         <Logo />
       </a>
-      <ul class="absolute hidden -translate-x-1/2 lg:flex left-1/2 items-center gap-1" role="list">
+      <ul class="hidden flex-1 lg:flex items-center justify-center gap-0.5 xl:gap-1" role="list">
         {
           mainLinks.map((l) => (
             <li>
               <a
                 href={l.href}
-                class="block px-3 py-1.5 text-sm border border-transparent rounded-full transition-colors text-foreground hover:border-accent focus:border-accent focus:outline-none"
+                class="block px-2 py-1.5 text-sm whitespace-nowrap border border-transparent rounded-full transition-colors text-foreground hover:border-accent focus:border-accent focus:outline-none xl:px-3"
               >
                 {l.label}
               </a>
@@ -37,7 +37,7 @@ const { transparent = false } = Astro.props as { transparent?: boolean };
           ))
         }
       </ul>
-      <div class="items-center hidden lg:flex gap-6">
+      <div class="items-center hidden shrink-0 lg:flex gap-4 xl:gap-6">
         <a
           href={agent.cell.href}
           class="hidden text-sm transition-colors xl:block text-muted-foreground hover:text-foreground"
@@ -49,7 +49,7 @@ const { transparent = false } = Astro.props as { transparent?: boolean };
         </Button>
       </div>
       <button
-        class="relative flex lg:hidden duration-500 text-foreground group"
+        class="relative flex ml-auto lg:hidden duration-500 text-foreground group"
         aria-controls="mobile-menu"
         aria-expanded="false"
         data-menu-button
